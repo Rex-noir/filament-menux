@@ -1,15 +1,15 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace AceREx\FilamentMenux;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 
-class SkeletonPlugin implements Plugin
+class FilamentMenuxPlugin implements Plugin
 {
     public function getId(): string
     {
-        return 'skeleton';
+        return 'filament-menux';
     }
 
     public function register(Panel $panel): void

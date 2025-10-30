@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace AceREx\FilamentMenux\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class FilamentMenuxCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'filament-menux';
 
     public $description = 'My command';
 
