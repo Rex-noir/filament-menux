@@ -100,8 +100,6 @@ class FilamentMenuxServiceProvider extends PackageServiceProvider
     protected function getAssets(): array
     {
         return [
-            // AlpineComponent::make('filament-menux', __DIR__ . '/../resources/dist/components/filament-menux.js'),
-            Css::make('filament-menux-styles', __DIR__ . '/../resources/dist/filament-menux.css'),
             Js::make('filament-menux-scripts', __DIR__ . '/../resources/dist/filament-menux.js'),
         ];
     }
@@ -146,7 +144,8 @@ class FilamentMenuxServiceProvider extends PackageServiceProvider
     protected function getMigrations(): array
     {
         return [
-            'create_filament-menux_table',
+            'create_menus_table',
+            'create_menu_items_table'
         ];
     }
 }
