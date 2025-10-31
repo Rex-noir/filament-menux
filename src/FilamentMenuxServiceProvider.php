@@ -2,9 +2,9 @@
 
 namespace AceREx\FilamentMenux;
 
-use Filament\Support\Assets\AlpineComponent;
+use AceREx\FilamentMenux\Commands\FilamentMenuxCommand;
+use AceREx\FilamentMenux\Testing\TestsFilamentMenux;
 use Filament\Support\Assets\Asset;
-use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
@@ -13,8 +13,6 @@ use Livewire\Features\SupportTesting\Testable;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use AceREx\FilamentMenux\Commands\FilamentMenuxCommand;
-use AceREx\FilamentMenux\Testing\TestsFilamentMenux;
 
 class FilamentMenuxServiceProvider extends PackageServiceProvider
 {
@@ -145,7 +143,7 @@ class FilamentMenuxServiceProvider extends PackageServiceProvider
     {
         return [
             'create_menus_table',
-            'create_menu_items_table'
+            'create_menu_items_table',
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace AceREx\FilamentMenux\Tests;
 
+use AceREx\FilamentMenux\FilamentMenuxServiceProvider;
 use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
 use BladeUI\Icons\BladeIconsServiceProvider;
 use Filament\Actions\ActionsServiceProvider;
@@ -16,7 +17,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use RyanChandler\BladeCaptureDirective\BladeCaptureDirectiveServiceProvider;
-use AceREx\FilamentMenux\FilamentMenuxServiceProvider;
 
 class TestCase extends Orchestra
 {
