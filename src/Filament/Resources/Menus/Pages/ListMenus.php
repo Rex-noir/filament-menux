@@ -21,7 +21,7 @@ class ListMenus extends ListRecords
         $staticMenus = $plugin->getStaticMenus();
         $existingSlugs = Menu::whereIn('slug', $staticMenus->keys())->pluck('slug');
 
-        if ($staticMenus->count() ===  $existingSlugs->count()) {
+        if ($staticMenus->count() === $existingSlugs->count()) {
             return [];
         }
 
@@ -29,13 +29,13 @@ class ListMenus extends ListRecords
 
             return [
                 Action::make('create')
-                    ->label("Add Menu")
+                    ->label('Add Menu')
                     ->schema([
                         CheckboxList::make('selected_menu_items')
-                            ->label("Select menus to create")
+                            ->label('Select menus to create')
                             ->options($staticMenus->toArray())
-                            ->disableOptionWhen(fn($value, $key): bool => in_array($value, $existingSlugs->toArray()))
-                            ->helperText("Menus that already exist are disabled.")
+                            ->disableOptionWhen(fn ($value, $key): bool => in_array($value, $existingSlugs->toArray()))
+                            ->helperText('Menus that already exist are disabled.')
                             ->required(),
                     ])
                     ->action(function (array $data) use ($staticMenus) {
@@ -55,7 +55,7 @@ class ListMenus extends ListRecords
         }
 
         return [
-            CreateAction::make()
+            CreateAction::make(),
         ];
     }
 }

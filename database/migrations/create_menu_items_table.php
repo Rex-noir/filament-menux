@@ -1,7 +1,7 @@
 <?php
 
-return new class extends Illuminate\Database\Migrations\Migration {
-
+return new class extends Illuminate\Database\Migrations\Migration
+{
     public function up(): void
     {
         Illuminate\Support\Facades\Schema::create('menu_items', function (Illuminate\Database\Schema\Blueprint $table) {

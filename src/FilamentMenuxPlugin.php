@@ -51,24 +51,22 @@ final class FilamentMenuxPlugin implements Plugin
     /**
      * Register a new static menu item for the plugin.
      *
-     * @param string $label The display name of the menu item.
-     * @param string $url   The target URL for the menu item.
-     *
-     * @return static
+     * @param  string  $label  The display name of the menu item.
+     * @param  string  $url  The target URL for the menu item.
      */
     public function addStaticMenuItem(string $label, string $url): static
     {
         $this->staticMenuItems->push(compact('label', 'url'));
+
         return $this;
     }
 
     /**
      * Define static menus for the plugin.
      *
-     * @param array<string, string>|callable(): array<string, string> $slugs
-     * @return static
+     * @param  array<string, string>|callable(): array<string, string>  $slugs
      */
-    public function useStaticMenus(array|callable $slugs): static
+    public function useStaticMenus(array | callable $slugs): static
     {
         $menus = is_callable($slugs) ? $slugs() : $slugs;
         $this->staticMenus = collect($menus);

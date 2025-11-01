@@ -18,14 +18,14 @@ use Filament\Schemas\Schema;
 
 class EditMenu extends Page implements HasForms
 {
-    use InteractsWithRecord, InteractsWithForms;
+    use InteractsWithForms;
+    use InteractsWithRecord;
 
     public ?array $data = [];
 
     protected static string $resource = MenuResource::class;
 
-    protected  string $view = 'filament-menux::pages.edit-menu';
-
+    protected string $view = 'filament-menux::pages.edit-menu';
 
     public function form(Schema $schema): Schema
     {
@@ -41,16 +41,16 @@ class EditMenu extends Page implements HasForms
                     ])
                     ->schema([
                         TextInput::make('name')
-                            ->label("Name")
+                            ->label('Name')
                             ->required()
                             ->maxLength(255),
-                    ])
+                    ]),
             ])
             ->model(Menu::class)
             ->statePath('data');
     }
 
-    public function mount(int|string $record): void
+    public function mount(int | string $record): void
     {
         $this->record = $this->resolveRecord($record);
         $this->form->fill($this->record->toArray());
