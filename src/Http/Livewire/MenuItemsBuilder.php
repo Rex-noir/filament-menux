@@ -6,10 +6,10 @@ namespace AceREx\FilamentMenux\Http\Livewire;
 
 use Livewire\Component;
 
-class MenuBuilder extends Component
+class MenuItemsBuilder extends Component
 {
     public function render()
     {
-        return view('filament-menux::livewire.menu-builder');
+        return view('filament-menux::livewire.menu-items-builder');
     }
 }
