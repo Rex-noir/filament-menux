@@ -3,6 +3,7 @@
 namespace AceREx\FilamentMenux;
 
 use AceREx\FilamentMenux\Commands\FilamentMenuxCommand;
+use AceREx\FilamentMenux\Http\Livewire\MenuBuilder;
 use AceREx\FilamentMenux\Testing\TestsFilamentMenux;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Js;
@@ -10,6 +11,7 @@ use Filament\Support\Facades\FilamentAsset;
 use Filament\Support\Facades\FilamentIcon;
 use Illuminate\Filesystem\Filesystem;
 use Livewire\Features\SupportTesting\Testable;
+use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Commands\InstallCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -44,7 +46,9 @@ class FilamentMenuxServiceProvider extends PackageServiceProvider
         }
 
         if (file_exists($package->basePath('/../database/migrations'))) {
-            $package->hasMigrations($this->getMigrations());
+            $package
+                ->hasMigrations($this->getMigrations())
+                ->runsMigrations();
         }
 
         if (file_exists($package->basePath('/../resources/lang'))) {
@@ -57,6 +61,11 @@ class FilamentMenuxServiceProvider extends PackageServiceProvider
     }
 
     public function packageRegistered(): void {}
+
+    public function bootingPackage()
+    {
+        Livewire::component('menu-builder', MenuBuilder::class);
+    }
 
     public function packageBooted(): void
     {
