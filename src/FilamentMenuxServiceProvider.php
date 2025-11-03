@@ -94,6 +94,8 @@ class FilamentMenuxServiceProvider extends PackageServiceProvider
             }
         }
 
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang');
+
         // Testing
         Testable::mixin(new TestsFilamentMenux);
     }

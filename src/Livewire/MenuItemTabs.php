@@ -160,9 +160,8 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
 
                         if (empty($filteredItems)) {
                             return [
-                                EmptyState::make('No items found')
-                                    ->icon(icon: Heroicon::ExclamationCircle)
-                                    ->description('No items found matching your search query.'),
+                                EmptyState::make(__('menux.tabs.no_items_found'))
+                                    ->icon(icon: Heroicon::ExclamationCircle),
                             ];
                         }
 
