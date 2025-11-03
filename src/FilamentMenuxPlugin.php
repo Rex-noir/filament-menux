@@ -40,7 +40,7 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected Collection $menuxableModels;
 
-    protected int $perPage = 5;
+    protected int $perPage = 4;
 
     public function __construct()
     {
