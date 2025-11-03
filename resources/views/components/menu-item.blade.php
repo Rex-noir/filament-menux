@@ -24,7 +24,7 @@
         <div class="flex gap-2 items-center [&_svg]:shrink-0">
             {{ ($this->editAction)(['title'=>$item->title, 'url'=>$item->url, 'target'=>$item->target, 'id'=>$item->id])  }}
             {{--            {{($this->createSubItemAction)(['menuItemId' => $item->id])}}--}}
-            {{--            {{($this->duplicateAction)(['menuItemId' => $item->id])}}--}}
+            {{($this->duplicateAction)(['id' => $item->id])}}
             {{($this->deleteAction)(['id' => $item->id])}}
             {{--            <x-filament-actions::group class="hidden" :actions="[--}}
             {{--                ($this->viewAction)(['menuItemId' => $item->id]),--}}

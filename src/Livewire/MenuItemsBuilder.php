@@ -80,6 +80,31 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->iconButton();
     }
 
+    public function duplicateAction(): Action
+    {
+        return Action::make('duplicateAction')
+            ->size(Size::Small)
+            ->icon(Heroicon::ServerStack)
+            ->tooltip('Duplicate')
+            ->iconButton()
+            ->action(function ($arguments) {
+                $id = $arguments['id'];
+                $item = MenuItem::findOrFail($id);
+
+                // Clone without tree structure columns
+                $replica = $item->replicate(['_lft', '_rgt', 'depth']);
+                $replica->title = $item->title . ' (Copy)'; // Optional: make duplicate distinct
+
+                // Insert as sibling (same parent, same level)
+                $replica->parent_id = $item->parent_id;
+                $replica->save();
+
+                // Ensure it becomes a sibling, not child
+                $replica->insertAfterNode($item);
+            });
+
+    }
+
     public function editAction(): Action
     {
         return Action::make('editAction')
