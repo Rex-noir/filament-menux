@@ -296,7 +296,14 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                                     ->selectablePlaceholder()
                                     ->options(MenuItemTarget::class),
                             ])
-                            ->action(fn (array $data) => dd($data)),
+                            ->action(function ($data) {
+                                MenuItem::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
+                                Notification::make('menuItemCreated')
+                                    ->success()
+                                    ->title('Menu item created successfully')
+                                    ->send();
+                                $this->dispatch(MenuxEvents::CREATED->value, menuId: $this->menuId, ids: [$data['title']]);
+                            }),
                     ])
                     ->compact()
                     ->footerActions([
