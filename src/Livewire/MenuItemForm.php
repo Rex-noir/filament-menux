@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AceREx\FilamentMenux\Livewire;
 
 use AceREx\FilamentMenux\Contracts\Enums\MenuItemTarget;
+use AceREx\FilamentMenux\Contracts\Enums\MenuxEvents;
 use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\FilamentMenuxPlugin;
 use AceREx\FilamentMenux\Models\MenuItem;
@@ -250,7 +251,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
         }
 
         $menuItem = MenuItem::query()->create($itemsToAdd->values()->toArray());
-
+        $this->dispatch(MenuxEvents::CREATED->value, menuId: $this->menuId, menuItemId: $menuItem->id);
         // Reset state
         $this->selectedItems = [];
         $this->searchQuery = null;
