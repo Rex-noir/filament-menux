@@ -10,9 +10,9 @@
                 <span class="font-medium">{{ str($item->title)->limit(30) }}</span>
                 <div>
                     <x-filament::link
-                        tag="button"
-                        weight="light"
-                        size="sm"
+                            tag="button"
+                            weight="light"
+                            size="sm"
                     >
                         <a target="_blank" href="{{$item->url}}">
                             {{ str($item->url)->limit(30) }}
@@ -23,7 +23,7 @@
         </div>
         <div class="flex gap-2 items-center [&_svg]:shrink-0">
             {{ ($this->editAction)(['title'=>$item->title, 'url'=>$item->url, 'target'=>$item->target, 'id'=>$item->id])  }}
-            {{--            {{($this->createSubItemAction)(['menuItemId' => $item->id])}}--}}
+            {{($this->createSubMenuItemAction)(['id' => $item->id])}}
             {{($this->duplicateAction)(['id' => $item->id])}}
             {{($this->deleteAction)(['id' => $item->id])}}
             {{--            <x-filament-actions::group class="hidden" :actions="[--}}
@@ -34,9 +34,9 @@
     </div>
 
     <div
-        @class(['nested ml-6' => true])
-        data-id="{{ $item->id }}"
-        x-data="{
+            @class(['nested ml-6' => true])
+            data-id="{{ $item->id }}"
+            x-data="{
             init(){
                 new Sortable(this.$el, {
                     handle: '.handle',

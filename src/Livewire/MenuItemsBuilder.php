@@ -4,14 +4,11 @@ declare(strict_types=1);
 
 namespace AceREx\FilamentMenux\Livewire;
 
-use AceREx\FilamentMenux\Contracts\Enums\MenuItemTarget;
 use AceREx\FilamentMenux\Contracts\Enums\MenuxEvents;
 use AceREx\FilamentMenux\Models\MenuItem;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
@@ -80,17 +77,20 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->iconButton();
     }
 
-    public function createSubMenuItemAction()
+    public function createSubMenuItemAction(): Action
     {
         return Action::make('createSubMenuItemAction')
             ->size(Size::Small)
-            ->icon(Heroicon::PencilSquare)
+            ->icon(Heroicon::ChevronDoubleDown)
             ->tooltip('Create Sub MenuItem')
+            ->modalHeading('Create Sub Menu Item')
             ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
             ->modalWidth(Width::Medium)
             ->modalSubmitActionLabel('Save')
             ->action(function ($data, $arguments) {
-                MenuItem::where('id', $arguments['id'])->update($data);
+                $parent = MenuItem::findOrFail($arguments['id']);
+                $item = MenuItem::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
+                $parent->appendNode($item);
             })
             ->iconButton();
     }
