@@ -192,19 +192,19 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
 
                             $pagination = [];
                             /** @var string $modelClass */
-                            $pagination[] = Action::make('loadPrevious')
-                                ->label('Load Previous')
+                            $pagination[] = Action::make(__('menux.actions.load_previous'))
+                                ->label(__('menux.actions.load_previous'))
                                 ->icon(icon: Heroicon::ChevronLeft)
                                 ->link()
                                 ->iconButton()
                                 ->disabled($data['current_page'] <= 1)
                                 ->action(fn () => $this->goToPage($modelClass, $data['current_page'] - 1));
 
-                            $pagination[] = Text::make("Page {$data['current_page']} of {$data['last_page']}");
+                            $pagination[] = Text::make(__('menux.tabs.page_of', ['current' => $data['current_page'], 'last' => $data['last_page']]));
 
                             /** @var string $modelClass */
                             $pagination[] = Action::make('loadMore')
-                                ->label('Load More')
+                                ->label(__('menux.actions.load_more'))
                                 ->icon(icon: Heroicon::ChevronRight)
                                 ->link()
                                 ->iconButton()
@@ -229,7 +229,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
                                         ->descriptions($descriptions);
                             } else {
                                 /** @var Menuxable $modelClass */
-                                $components[] = EmptyState::make("No items found for {$modelClass::getMenuxLabel()}")
+                                $components[] = EmptyState::make(__('menux.tabs.no_items_for_model', ['label' => $modelClass::getMenuxLabel()]))
                                     ->icon(icon: Heroicon::ExclamationCircle);
                             }
 
@@ -275,9 +275,9 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
         $this->dispatch(MenuxEvents::CREATED->value, menuId: $this->menuId, ids: $itemsToAdd->keys()->toArray());
 
         Notification::make('success')
-            ->title('Menu items added successfully')
+            ->title(__('menux.notifications.items_added.title'))
             ->success()
-            ->body("Total items added: {$itemsToAdd->count()}")
+            ->body(__('menux.notifications.items_added.body', ['count' => count($itemsToAdd)]))
             ->send();
         // Reset state
         $this->selectedItems = [];
@@ -288,20 +288,20 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     {
         return $schema
             ->components([
-                Section::make('Menu Items')
+                Section::make(__('menux.labels.menu_items'))
                     ->headerActions([
                         Action::make('newItem')
                             ->icon(icon: Heroicon::PlusCircle)
-                            ->label('New Custom Menu Item')
+                            ->label(__('menux.actions.add_items'))
                             ->iconButton()
-                            ->modalHeading('Add custom menu items directly')
+                            ->modalHeading(__('menux.labels.custom_menu_item_modal_heading'))
                             ->modalWidth(width: Width::Small)
                             ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
                             ->action(function ($data) {
                                 MenuItem::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
                                 Notification::make('menuItemCreated')
                                     ->success()
-                                    ->title('Menu item created successfully')
+                                    ->title(__('menux.notifications.menu_item_created.title'))
                                     ->send();
                                 $this->dispatch(MenuxEvents::CREATED->value, menuId: $this->menuId, ids: [$data['title']]);
                             }),
@@ -309,16 +309,16 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
                     ->compact()
                     ->footerActions([
                         Action::make('addItems')
-                            ->label(fn () => count($this->selectedItems) > 0 ? 'Add ' . count($this->selectedItems) . ' Selected Items' : 'Add Menu Items')
+                            ->label(fn () => count($this->selectedItems) > 0 ? __('menux.actions.add_selected', ['count' => count($this->selectedItems)]) : __('menux.actions.add_items'))
                             ->disabled(fn () => empty($this->selectedItems))
                             ->action('addMenuItems'),
                     ])
                     ->secondary()
                     ->schema([
                         TextInput::make('search')
-                            ->label('Search')
+                            ->label(__('menux.labels.search'))
                             ->hiddenLabel()
-                            ->placeholder('Search menu items...')
+                            ->placeholder(__('menux.placeholders.search'))
                             ->statePath('searchQuery')
                             ->live(debounce: 500)
                             ->afterStateUpdated(fn () => $this->updatedSearchQuery()),
