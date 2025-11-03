@@ -17,5 +17,5 @@ interface Menuxable
 
     public function getMenuxTarget(): MenuItemTarget;
 
-    public static function searchMenuxablesUsing(string $q, Builder $builder): Builder;
+    public static function getMenuxablesUsing(?string $q, Builder $builder): Builder;
 }

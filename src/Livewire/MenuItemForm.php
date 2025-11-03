@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AceREx\FilamentMenux\Livewire;
 
 use AceREx\FilamentMenux\Contracts\Enums\MenuItemTarget;
+use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\FilamentMenuxPlugin;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
@@ -29,9 +30,55 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
 
     protected string $menuId;
 
+    protected array $menuxables;
+
+    protected ?string $searchQuery = null;
+
     public function mount(string $menuId): void
     {
         $this->menuId = $menuId;
+        $this->loadMenuxables();
+    }
+
+    private function loadMenuxables(): void
+    {
+        $plugin = FilamentMenuxPlugin::get();
+        $menuxableModels = $plugin->getMenuxableModels();
+
+        if ($menuxableModels->isEmpty()) {
+            return;
+        }
+
+        $this->menuxables = [];
+
+        $menuxableModels->each(function (string $modelClass) {
+            $this->menuxables[$modelClass] = $this->buildMenuxableData($modelClass);
+        });
+    }
+
+    /**
+     * Build the menuxable data structure for a single model class.
+     *
+     * @param  class-string<Menuxable>  $modelClass
+     * @return array<string, mixed>
+     */
+    private function buildMenuxableData(string $modelClass, int $page = 1): array
+    {
+        $pagination = $modelClass::getMenuxablesUsing($this->searchQuery, $modelClass::query())->paginate(5);
+
+        return [
+            'items' => collect($pagination->items())->map(function ($item) {
+                return [
+                    'title' => $item->getMenuxTitle(),
+                    'url' => $item->getMenuxUrl(),
+                    'target' => $item->getMenuxTarget()->value,
+                ];
+            })->toArray(),
+            'current_page' => $pagination->currentPage(),
+            'last_page' => $pagination->lastPage(),
+            'per_page' => $pagination->perPage(),
+            'total' => $pagination->total(),
+        ];
     }
 
     private function getTabs(): array
