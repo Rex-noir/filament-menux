@@ -5,7 +5,6 @@ namespace AceREx\FilamentMenux;
 use AceREx\FilamentMenux\Commands\FilamentMenuxCommand;
 use AceREx\FilamentMenux\Livewire\MenuItemForm;
 use AceREx\FilamentMenux\Livewire\MenuItemsBuilder;
-use AceREx\FilamentMenux\Livewire\MenuItemUi;
 use AceREx\FilamentMenux\Testing\TestsFilamentMenux;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Js;
@@ -68,7 +67,6 @@ class FilamentMenuxServiceProvider extends PackageServiceProvider
     {
         Livewire::component('menu-items-builder', MenuItemsBuilder::class);
         Livewire::component('menu-item-form', MenuItemForm::class);
-        Livewire::component('menu-item-ui', MenuItemUi::class);
     }
 
     public function packageBooted(): void

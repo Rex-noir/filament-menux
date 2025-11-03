@@ -35,27 +35,27 @@
                     },
                 }">
                     @foreach($items as $item)
-                        @livewire('menu-item-ui',  ['item' => $item])
+                        @include('filament-menux::components.menu-item',  ['item' => $item])
                     @endforeach
                 </div>
             </div>
             <x-filament::button
-                    :dark-mode="config('filament.dark_mode')"
-                    wire:loading.attr="disabled"
-                    type="submit"
-                    class="mt-2"
+                :dark-mode="config('filament.dark_mode')"
+                wire:loading.attr="disabled"
+                type="submit"
+                class="mt-2"
             >
-                <x-filament::loading-indicator class="h-5 w-5"  wire:loading="true"/>
+                <x-filament::loading-indicator class="h-5 w-5" wire:loading="true" />
                 {{ __('Save') }}
             </x-filament::button>
 
             <x-filament::button
-                    :dark-mode="config('filament.dark_mode')"
-                    wire:loading.attr="disabled"
-                    type="button"
-                    class="mt-2"
-                    color="danger"
-                    wire:click="$refresh"
+                :dark-mode="config('filament.dark_mode')"
+                wire:loading.attr="disabled"
+                type="button"
+                class="mt-2"
+                color="danger"
+                wire:click="$refresh"
             >
                 <x-filament::loading-indicator wire:loading="true" class="h-5 w-5" />
                 {{ __('Reset') }}
