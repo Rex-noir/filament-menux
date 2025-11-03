@@ -45,8 +45,14 @@
                     fallbackOnBody: true,
                     swapThreshold: 0.65,
                     onEnd: (evt) => {
-                        this.data = getDataStructure(document.getElementById('parentNested'));
-                    }
+                        const newData = this.getDataStructure(document.getElementById('parentNested'))
+                            const oldData = this.data
+
+                            if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+                                this.data = newData
+                                this.$wire.save()
+                            }
+                    },
                 })
             },
         }"

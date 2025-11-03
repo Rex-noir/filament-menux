@@ -29,7 +29,13 @@
                             fallbackOnBody: true,
                             swapThreshold: 0.65,
                             onEnd: (evt) => {
-                                this.data = getDataStructure(document.getElementById('parentNested'));
+                               const newData = this.getDataStructure(document.getElementById('parentNested'));
+                               const oldData = this.data;
+
+                               if (JSON.stringify(newData) !== JSON.stringify(oldData)) {
+                                    this.data = newData;
+                                    this.$wire.save();
+                                }
                             }
                         })
                     },
@@ -39,27 +45,6 @@
                     @endforeach
                 </div>
             </div>
-            <x-filament::button
-                :dark-mode="config('filament.dark_mode')"
-                wire:loading.attr="disabled"
-                type="submit"
-                class="mt-2"
-            >
-                <x-filament::loading-indicator class="h-5 w-5" wire:loading="true" />
-                {{ __('Save') }}
-            </x-filament::button>
-
-            <x-filament::button
-                :dark-mode="config('filament.dark_mode')"
-                wire:loading.attr="disabled"
-                type="button"
-                class="mt-2"
-                color="danger"
-                wire:click="$refresh"
-            >
-                <x-filament::loading-indicator wire:loading="true" class="h-5 w-5" />
-                {{ __('Reset') }}
-            </x-filament::button>
         @else
             <div class="text-gray-500 text-center">
                 <p>
