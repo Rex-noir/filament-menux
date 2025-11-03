@@ -6,6 +6,7 @@ namespace AceREx\FilamentMenux\Livewire;
 
 use AceREx\FilamentMenux\Contracts\Enums\MenuxEvents;
 use AceREx\FilamentMenux\Models\MenuItem;
+use Filament\Notifications\Notification;
 use Livewire\Component;
 
 class MenuItemsBuilder extends Component
@@ -25,7 +26,16 @@ class MenuItemsBuilder extends Component
 
     public function save(): void
     {
-        // TODO
+        if (empty($this->data)) {
+            return;
+        }
+
+        MenuItem::rebuildTree($this->data);
+
+        Notification::make()
+            ->title(__('filament-menu-builder::menu-builder.menu_saved'))
+            ->success()
+            ->send();
     }
 
     public function items(): \LaravelIdea\Helper\AceREx\FilamentMenux\Models\_IH_MenuItem_C | \Illuminate\Database\Eloquent\Collection | array

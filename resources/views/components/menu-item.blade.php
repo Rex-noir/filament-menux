@@ -49,7 +49,7 @@
         }"
     >
         @foreach($item->children as $children)
-            @livewire('filament-menux::components.menu-item', ['item'=>$children])
+            @include('filament-menux::components.menu-item', ['item'=>$children])
         @endforeach
     </div>
 </div>
