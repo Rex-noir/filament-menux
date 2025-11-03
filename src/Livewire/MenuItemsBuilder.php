@@ -33,7 +33,7 @@ class MenuItemsBuilder extends Component
         MenuItem::rebuildTree($this->data);
 
         Notification::make()
-            ->title(__('filament-menu-builder::menu-builder.menu_saved'))
+            ->title('Menu items saved successfully.')
             ->success()
             ->send();
     }
