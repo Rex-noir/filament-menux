@@ -40,6 +40,8 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected Collection $menuxableModels;
 
+    protected int $menuxablePerPage = 5;
+
     public function __construct()
     {
         // Lazy collection initialization ensures no shared static state.
@@ -47,7 +49,19 @@ final class FilamentMenuxPlugin implements Plugin
         $this->menuxableModels = collect();
     }
 
-    public function addMenuxableModel(string $model): static
+    public function getMenuxablePerPage(): int
+    {
+        return $this->menuxablePerPage;
+    }
+
+    public function setMenuxablePerPage(int $menuxablePerPage): FilamentMenuxPlugin
+    {
+        $this->menuxablePerPage = $menuxablePerPage;
+
+        return $this;
+    }
+
+    public function addMenuxableModel(string $model): FilamentMenuxPlugin
     {
         if (! class_exists($model)) {
             throw new InvalidArgumentException("Model class {$model} does not exist");
