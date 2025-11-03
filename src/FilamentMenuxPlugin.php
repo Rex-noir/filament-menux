@@ -27,12 +27,11 @@ final class FilamentMenuxPlugin implements Plugin
     protected string $menuResource = MenuResource::class;
 
     /**
-    * Holds statically defined menu items with labels and URLs.
-    *
-    * @var \Illuminate\Support\Collection<string, array{label: string, url: string}>
-    */
+     * Holds statically defined menu items with labels and URLs.
+     *
+     * @var \Illuminate\Support\Collection<string, array{label: string, url: string}>
+     */
     protected Collection $staticMenuItems;
-
 
     public function __construct()
     {
@@ -58,7 +57,8 @@ final class FilamentMenuxPlugin implements Plugin
      */
     public function addStaticMenuItem(string $label, string $url): static
     {
-        $this->staticMenuItems->put((string)Str::uuid(), compact('label', 'url'));
+        $this->staticMenuItems->put((string) Str::uuid(), compact('label', 'url'));
+
         return $this;
     }
 

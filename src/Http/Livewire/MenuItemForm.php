@@ -20,10 +20,10 @@ use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\View\View;
 
-class MenuItemForm extends \Livewire\Component implements HasSchemas, HasActions
+class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
 {
-    use InteractsWithSchemas;
     use InteractsWithActions;
+    use InteractsWithSchemas;
 
     protected string $menuId;
 
@@ -33,8 +33,8 @@ class MenuItemForm extends \Livewire\Component implements HasSchemas, HasActions
     }
 
     /**
-    * @return array<Illuminate\Support\Traits\TKey,mixed>
-    */
+     * @return array<Illuminate\Support\Traits\TKey,mixed>
+     */
     private function getTabs(): array
     {
         $tabs = collect();
@@ -44,14 +44,14 @@ class MenuItemForm extends \Livewire\Component implements HasSchemas, HasActions
 
         if ($staticMenuItems->isNotEmpty()) {
             $tabs->push(
-                Tab::make("Static")
+                Tab::make('Static')
                     ->schema(function () use ($staticMenuItems) {
                         return [
                             CheckboxList::make('static_menu_items')
-                            ->hiddenLabel()
-                            ->options($staticMenuItems->mapWithKeys(function ($item, $id) {
-                                return [$id => $item['label']];
-                            }))
+                                ->hiddenLabel()
+                                ->options($staticMenuItems->mapWithKeys(function ($item, $id) {
+                                    return [$id => $item['label']];
+                                })),
                         ];
                     })
             );
@@ -64,37 +64,37 @@ class MenuItemForm extends \Livewire\Component implements HasSchemas, HasActions
     {
         return $schema
             ->components(components: [
-                Section::make("Menu Items")
+                Section::make('Menu Items')
                     ->headerActions([
-                        Action::make("newItem")
-                            ->icon(icon:Heroicon::PlusCircle)
+                        Action::make('newItem')
+                            ->icon(icon: Heroicon::PlusCircle)
                             ->label('New Custom Menu Item')
                             ->iconButton()
-                            ->modalHeading("Add custom menu items directly")
+                            ->modalHeading('Add custom menu items directly')
                             ->modalWidth(width: Width::Small)
                             ->schema([
-                                TextInput::make("title")
+                                TextInput::make('title')
                                     ->required(),
-                                TextInput::make("url")
+                                TextInput::make('url')
                                     ->required(),
-                                Select::make("target")
+                                Select::make('target')
                                     ->default(MenuItemTarget::SELF)
                                     ->selectablePlaceholder()
-                                    ->options(MenuItemTarget::class)
+                                    ->options(MenuItemTarget::class),
 
                             ])
                             ->action(function (array $data) {
                                 dd($data);
-                            })
+                            }),
                     ])
                     ->compact()
                     ->schema([
-                        Tabs::make("Tabs")
+                        Tabs::make('Tabs')
                             ->tabs($this->getTabs())
                             ->vertical()
                             ->persistTab()
-                            ->contained()
-                    ])
+                            ->contained(),
+                    ]),
             ]);
     }
 

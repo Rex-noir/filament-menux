@@ -18,8 +18,8 @@ use Filament\Schemas\Schema;
 
 class EditMenu extends Page implements HasForms
 {
-    use InteractsWithRecord;
     use InteractsWithForms;
+    use InteractsWithRecord;
 
     public ?array $data = [];
 

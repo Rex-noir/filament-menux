@@ -13,6 +13,6 @@ class MenuItem extends Model
         'title',
         'url',
         'order',
-        'target'
+        'target',
     ];
 }
