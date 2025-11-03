@@ -110,6 +110,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                 $tabs->push(
                     Tab::make($modelClass::getMenuxLabel())
                         ->schema(function () use ($modelClass) {
+                            /** @var string $modelClass */
                             $data = $this->menuxables[$modelClass] ?? [];
                             $pagination = [];
                             $pagination[] = Action::make('loadPrevious')
