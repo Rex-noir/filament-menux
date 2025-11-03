@@ -16,6 +16,7 @@ use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Schemas\Components\EmptyState;
 use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -170,7 +171,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
         }
 
         if ($menuxableModels->isNotEmpty()) {
-            $menuxableModels->each(function (string $modelClass) use ($tabs) {
+            $menuxableModels->each(callback: function (string $modelClass) use ($tabs) {
                 /** @var Menuxable $modelClass */
                 $tabs->push(
                     Tab::make($modelClass::getMenuxLabel())
@@ -205,14 +206,25 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                                 ->action(fn () => $this->goToPage($modelClass, $data['current_page'] + 1));
 
                             /** @var string $modelClass */
-                            $components = [
-                                CheckboxList::make('menuxable_items')
-                                    ->hiddenLabel()
-                                    ->statePath('selectedItems')
-                                    ->live()
-                                    ->options(fn () => collect($data['items'])->mapWithKeys(fn ($item, $index) => [$item['id'] => $item['title']])->toArray())
-                                    ->descriptions(fn () => collect($data['items'])->mapWithKeys(fn ($item, $index) => [$item['id'] => $item['url']])->toArray()),
-                            ];
+                            $options = collect($data['items'])
+                                ->mapWithKeys(function ($item, $index) {
+                                    return [$item['id'] => $item['title']];
+                                });
+                            $descriptions = collect($data['items'])->mapWithKeys(fn ($item, $index) => [$item['id'] => $item['url']])->toArray();
+                            $components = [];
+                            if ($options->isNotEmpty()) {
+                                $components[] =
+                                    CheckboxList::make('menuxable_items')
+                                        ->hiddenLabel()
+                                        ->statePath('selectedItems')
+                                        ->live()
+                                        ->options($options->toArray())
+                                        ->descriptions($descriptions);
+                            } else {
+                                /** @var Menuxable $modelClass */
+                                $components[] = EmptyState::make("No items found for {$modelClass::getMenuxLabel()}")
+                                    ->icon(icon: Heroicon::ExclamationCircle);
+                            }
 
                             if (! empty($pagination)) {
                                 $components[] = Flex::make($pagination)
