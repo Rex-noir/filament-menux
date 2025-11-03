@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AceREx\FilamentMenux\Contracts;
+namespace AceREx\FilamentMenux\Contracts\Enums;
 
 use Filament\Support\Contracts\HasLabel;
 

@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace AceREx\FilamentMenux;
 
+use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\Filament\Resources\Menus\MenuResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
+
+use function Livewire\of;
 
 final class FilamentMenuxPlugin implements Plugin
 {
     /**
      * Cached collection of static menus defined for the plugin.
      *
-     * @var \Illuminate\Support\Collection<string, string>|null
+     * @var Collection<string, string>|null
      */
     protected ?Collection $staticMenus = null;
 
@@ -29,20 +34,47 @@ final class FilamentMenuxPlugin implements Plugin
     /**
      * Holds statically defined menu items with labels and URLs.
      *
-     * @var \Illuminate\Support\Collection<string, array{label: string, url: string}>
+     * @var Collection<string, array{label: string, url: string}>
      */
     protected Collection $staticMenuItems;
+
+    protected Collection $menuxableModels;
 
     public function __construct()
     {
         // Lazy collection initialization ensures no shared static state.
         $this->staticMenuItems = collect();
+        $this->menuxableModels = collect();
+    }
+
+    public function addMenuxableModel(string $model): static
+    {
+        if (! class_exists($model)) {
+            throw new InvalidArgumentException("Model class {$model} does not exist");
+        }
+
+        if (! is_subclass_of($model, Model::class)) {
+            throw new InvalidArgumentException("Model class {$model} is not a valid model");
+        }
+
+        if (! in_array(Menuxable::class, class_implements($model))) {
+            throw new InvalidArgumentException("{$model} must implement " . Menuxable::class . '.');
+        }
+
+        $this->menuxableModels->push($model);
+
+        return $this;
+    }
+
+    public function getMenuxableModels(): Collection
+    {
+        return $this->menuxableModels;
     }
 
     /**
      * Retrieve all registered static menu items, ensuring unique URLs.
      *
-     * @return \Illuminate\Support\Collection<int, array{label: string, url: string}>
+     * @return Collection<int, array{label: string, url: string}>
      */
     public function getStaticMenuItems(): Collection
     {
@@ -78,7 +110,7 @@ final class FilamentMenuxPlugin implements Plugin
     /**
      * Retrieve the currently defined static menus.
      *
-     * @return \Illuminate\Support\Collection<string, string>|null
+     * @return Collection<string, string>|null
      */
     public function getStaticMenus(): ?Collection
     {
@@ -112,18 +144,18 @@ final class FilamentMenuxPlugin implements Plugin
     /**
      * Create a new plugin instance through the service container.
      */
-    public static function make(): static
+    public static function make(): FilamentMenuxPlugin
     {
-        return app(static::class);
+        return app(FilamentMenuxPlugin::class);
     }
 
     /**
      * Retrieve the active plugin instance registered in Filament.
      */
-    public static function get(): static
+    public static function get(): FilamentMenuxPlugin
     {
         /** @var static $plugin */
-        $plugin = filament(app(static::class)->getId());
+        $plugin = filament(app(FilamentMenuxPlugin::class)->getId());
 
         return $plugin;
     }

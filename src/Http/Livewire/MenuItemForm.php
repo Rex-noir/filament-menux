@@ -2,7 +2,7 @@
 
 namespace AceREx\FilamentMenux\Http\Livewire;
 
-use AceREx\FilamentMenux\Contracts\MenuItemTarget;
+use AceREx\FilamentMenux\Contracts\Enums\MenuItemTarget;
 use AceREx\FilamentMenux\FilamentMenuxPlugin;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
