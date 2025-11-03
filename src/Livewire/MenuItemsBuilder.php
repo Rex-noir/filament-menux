@@ -67,6 +67,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         return Action::make('editAction')
             ->size(Size::Small)
             ->icon(Heroicon::PencilSquare)
+            ->tooltip('Edit')
             ->schema(function ($arguments) {
                 return [
                     TextInput::make('title'),
