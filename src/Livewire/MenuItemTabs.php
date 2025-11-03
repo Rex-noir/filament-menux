@@ -158,6 +158,14 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
                     ->schema(function () {
                         $filteredItems = $this->getFilteredStaticItems();
 
+                        if (empty($filteredItems)) {
+                            return [
+                                EmptyState::make('No items found')
+                                    ->icon(icon: Heroicon::ExclamationCircle)
+                                    ->description('No items found matching your search query.'),
+                            ];
+                        }
+
                         return [
                             CheckboxList::make('static_items')
                                 ->hiddenLabel()
