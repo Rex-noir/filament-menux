@@ -130,7 +130,6 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
 
     public function goToPage(string $modelClass, int $page): void
     {
-        $this->selectedItems = [];
         $this->buildMenuxableData($modelClass, $page);
     }
 
