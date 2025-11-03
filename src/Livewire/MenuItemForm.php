@@ -34,9 +34,6 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
         $this->menuId = $menuId;
     }
 
-    /**
-     * @return array
-     */
     private function getTabs(): array
     {
         $tabs = collect();
@@ -90,10 +87,13 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                             }),
                     ])
                     ->compact()
+                    ->footerActions([
+                        Action::make('Add'),
+                    ])
+                    ->secondary()
                     ->schema([
                         Tabs::make('Tabs')
                             ->tabs($this->getTabs())
-                            ->vertical()
                             ->persistTab()
                             ->contained(),
                     ]),
