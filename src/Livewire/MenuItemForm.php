@@ -15,6 +15,7 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -68,7 +69,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
         $this->staticItems = $staticMenuItems->map(function ($item, $id) {
             return [
                 'id' => $id,
-                'label' => $item['label'],
+                'title' => $item['label'],
                 'url' => $item['url'] ?? '#',
                 'target' => $item['target']?->value ?? MenuItemTarget::SELF->value,
                 'type' => 'static',
@@ -161,7 +162,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                                 ->hiddenLabel()
                                 ->statePath('selectedItems')
                                 ->live()
-                                ->options(collect($filteredItems)->mapWithKeys(fn ($item) => [$item['id'] => $item['label']]))
+                                ->options(collect($filteredItems)->mapWithKeys(fn ($item) => [$item['id'] => $item['title']]))
                                 ->descriptions(collect($filteredItems)->mapWithKeys(fn ($item) => [$item['id'] => $item['url']])),
                         ];
                     })
@@ -249,9 +250,16 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
         if (empty($itemsToAdd)) {
             return;
         }
+        collect($itemsToAdd->values())->each(function ($data) {
+            MenuItem::create($data);
+        });
+        $this->dispatch(MenuxEvents::CREATED->value, menuId: $this->menuId, ids: $itemsToAdd->keys()->toArray());
 
-        $menuItem = MenuItem::query()->create($itemsToAdd->values()->toArray());
-        $this->dispatch(MenuxEvents::CREATED->value, menuId: $this->menuId, menuItemId: $menuItem->id);
+        Notification::make('success')
+            ->title('Menu items added successfully')
+            ->success()
+            ->body("Total items added: {$itemsToAdd->count()}")
+            ->send();
         // Reset state
         $this->selectedItems = [];
         $this->searchQuery = null;
