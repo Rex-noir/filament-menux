@@ -102,6 +102,8 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->icon(Heroicon::ServerStack)
             ->tooltip('Duplicate')
             ->iconButton()
+            ->requiresConfirmation()
+            ->modalHeading('Duplicate Menu Item?')
             ->action(function ($arguments) {
                 $id = $arguments['id'];
                 $item = MenuItem::findOrFail($id);
