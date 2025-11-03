@@ -57,6 +57,7 @@ final class FilamentMenuxPlugin implements Plugin
     public function setPerPage(int $menuxablePerPage): FilamentMenuxPlugin
     {
         $this->perPage = $menuxablePerPage;
+
         return $this;
     }
 
