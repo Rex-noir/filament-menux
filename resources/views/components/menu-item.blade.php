@@ -10,12 +10,13 @@
                 <span class="font-medium">{{ str($item->title)->limit(30) }}</span>
                 <div>
                     <x-filament::link
-                        wire:click="openNewUserModal"
                         tag="button"
                         weight="light"
                         size="sm"
                     >
-                        {{$item->url}}
+                        <a target="_blank" href="{{$item->url}}">
+                            {{$item->url}}
+                        </a>
                     </x-filament::link>
                 </div>
             </div>
