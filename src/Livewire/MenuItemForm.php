@@ -60,7 +60,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
     /**
      * Build the menuxable data structure for a single model class.
      *
-     * @param class-string<Menuxable> $modelClass
+     * @param  class-string<Menuxable>  $modelClass
      * @return array<string, mixed>
      */
     private function buildMenuxableData(string $modelClass, int $page = 1): array
@@ -146,9 +146,9 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                                     ->hiddenLabel()
                                     ->options($options),
                             ];
-                            if (!empty($pagination)) {
+                            if (! empty($pagination)) {
                                 $components[] = Flex::make($pagination)
-                                    ->extraAttributes(['style'=>'text-align: center;'])
+                                    ->extraAttributes(['style' => 'text-align: center;'])
                                     ->columnSpanFull();
                             }
 
