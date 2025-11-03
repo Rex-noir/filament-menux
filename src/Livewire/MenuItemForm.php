@@ -140,7 +140,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
         }
 
         return collect($this->staticItems)
-            ->filter(fn ($item) => str_contains(strtolower($item['label']), strtolower($this->searchQuery)))
+            ->filter(fn ($item) => str_contains(strtolower($item['title']), strtolower($this->searchQuery)))
             ->toArray();
     }
 
