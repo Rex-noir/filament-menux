@@ -31,7 +31,7 @@ use Illuminate\View\View;
 use JetBrains\PhpStorm\NoReturn;
 use Livewire\Attributes\Url;
 
-class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
+class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
 {
     use InteractsWithActions;
     use InteractsWithSchemas;
@@ -324,6 +324,6 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
 
     public function render(): View
     {
-        return view('filament-menux::livewire.menu-item-form');
+        return view('filament-menux::livewire.menu-item-tabs');
     }
 }
