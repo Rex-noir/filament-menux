@@ -7,6 +7,7 @@ namespace AceREx\FilamentMenux\Livewire;
 use AceREx\FilamentMenux\Contracts\Enums\MenuItemTarget;
 use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\FilamentMenuxPlugin;
+use AceREx\FilamentMenux\Models\MenuItem;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -235,17 +236,23 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
         });
 
         $itemsToAdd = collect($this->selectedItems)->mapWithKeys(function ($item, $index) use ($items) {
-            return [$item => $items->get($item)];
+            $itemData = $items->get($item);
+            $itemData['target'] = MenuItemTarget::tryFrom($itemData['target']) ?? MenuItemTarget::SELF;
+            $itemData['menu_id'] = $this->menuId;
+            unset($itemData['id']);
+            unset($itemData['type']);
+
+            return [$item => $itemData];
         });
 
-        dd($itemsToAdd, $items, $this->selectedItems);
         if (empty($itemsToAdd)) {
             return;
         }
 
+        $menuItem = MenuItem::query()->create($itemsToAdd->values()->toArray());
+
         // Reset state
         $this->selectedItems = [];
-        $this->visibleItems = [];
         $this->searchQuery = null;
     }
 
