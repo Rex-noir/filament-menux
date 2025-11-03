@@ -40,7 +40,7 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected Collection $menuxableModels;
 
-    protected int $menuxablePerPage = 5;
+    protected int $perPage = 5;
 
     public function __construct()
     {
@@ -49,15 +49,14 @@ final class FilamentMenuxPlugin implements Plugin
         $this->menuxableModels = collect();
     }
 
-    public function getMenuxablePerPage(): int
+    public function getPerPage(): int
     {
-        return $this->menuxablePerPage;
+        return $this->perPage;
     }
 
-    public function setMenuxablePerPage(int $menuxablePerPage): FilamentMenuxPlugin
+    public function setPerPage(int $menuxablePerPage): FilamentMenuxPlugin
     {
-        $this->menuxablePerPage = $menuxablePerPage;
-
+        $this->perPage = $menuxablePerPage;
         return $this;
     }
 
