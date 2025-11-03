@@ -288,14 +288,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                             ->iconButton()
                             ->modalHeading('Add custom menu items directly')
                             ->modalWidth(width: Width::Small)
-                            ->schema([
-                                TextInput::make('title')->required(),
-                                TextInput::make('url')->required(),
-                                Select::make('target')
-                                    ->default(MenuItemTarget::SELF)
-                                    ->selectablePlaceholder()
-                                    ->options(MenuItemTarget::class),
-                            ])
+                            ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
                             ->action(function ($data) {
                                 MenuItem::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
                                 Notification::make('menuItemCreated')

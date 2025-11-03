@@ -80,6 +80,21 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->iconButton();
     }
 
+    public function createSubMenuItemAction()
+    {
+        return Action::make('createSubMenuItemAction')
+            ->size(Size::Small)
+            ->icon(Heroicon::PencilSquare)
+            ->tooltip('Create Sub MenuItem')
+            ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
+            ->modalWidth(Width::Medium)
+            ->modalSubmitActionLabel('Save')
+            ->action(function ($data, $arguments) {
+                MenuItem::where('id', $arguments['id'])->update($data);
+            })
+            ->iconButton();
+    }
+
     public function duplicateAction(): Action
     {
         return Action::make('duplicateAction')
@@ -111,14 +126,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->size(Size::Small)
             ->icon(Heroicon::PencilSquare)
             ->tooltip('Edit')
-            ->schema(function ($arguments) {
-                return [
-                    TextInput::make('title'),
-                    TextInput::make('url'),
-                    Select::make('target')
-                        ->options(MenuItemTarget::class),
-                ];
-            })
+            ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
             ->modalWidth(Width::Medium)
             ->fillForm(function ($arguments) {
                 return $arguments;
