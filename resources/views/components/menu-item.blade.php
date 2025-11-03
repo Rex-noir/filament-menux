@@ -25,7 +25,7 @@
             {{ ($this->editAction)(['title'=>$item->title, 'url'=>$item->url, 'target'=>$item->target, 'id'=>$item->id])  }}
             {{--            {{($this->createSubItemAction)(['menuItemId' => $item->id])}}--}}
             {{--            {{($this->duplicateAction)(['menuItemId' => $item->id])}}--}}
-            {{--            {{($this->deleteAction)(['menuItemId' => $item->id])}}--}}
+            {{($this->deleteAction)(['id' => $item->id])}}
             {{--            <x-filament-actions::group class="hidden" :actions="[--}}
             {{--                ($this->viewAction)(['menuItemId' => $item->id]),--}}
             {{--                ($this->goToLinkAction)([])->url($item->is_link_resolved ? $item->link : '#'),--}}

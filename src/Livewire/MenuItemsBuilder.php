@@ -62,6 +62,24 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         return $items->toTree();
     }
 
+    public function deleteAction(): Action
+    {
+        return Action::make('deleteAction')
+            ->size(Size::Small)
+            ->icon(Heroicon::Trash)
+            ->color('danger')
+            ->tooltip('Delete')
+            ->requiresConfirmation()
+            ->tooltip('Delete')
+            ->action(function ($arguments) {
+                $id = $arguments['id'];
+                MenuItem::descendantsAndSelf($id)->each(function ($item) {
+                    $item->delete();
+                });
+            })
+            ->iconButton();
+    }
+
     public function editAction(): Action
     {
         return Action::make('editAction')
