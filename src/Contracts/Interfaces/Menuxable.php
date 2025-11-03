@@ -7,6 +7,9 @@ namespace AceREx\FilamentMenux\Contracts\Interfaces;
 use AceREx\FilamentMenux\Contracts\Enums\MenuItemTarget;
 use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @method static query()
+ */
 interface Menuxable
 {
     public static function getMenuxLabel(): string;
