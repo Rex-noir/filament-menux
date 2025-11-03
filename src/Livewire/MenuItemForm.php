@@ -24,8 +24,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\View\View;
-use Livewire\Attributes\Js;
-use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 
 class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
 {
@@ -40,6 +39,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
 
     public ?string $searchQuery = null;
 
+    #[Url(as: 'tab')]
     public ?string $activeTab = null;
 
     public array $selectedItems = [];
@@ -156,11 +156,10 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
     public function onStateSelected($selected): void
     {
         $oldActiveTab = $this->activeTab;
-        $this->getActiveTab();
         if ($oldActiveTab && $this->activeTab !== $oldActiveTab) {
-            $this->selectedItems = [
-                $selected,
-            ];
+            dd('HI');
+            $this->selectedItems = [];
+            $this->selectedItems[] = $selected;
         }
     }
 
@@ -357,7 +356,14 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                     ->compact()
                     ->footerActions([
                         Action::make('addItems')
-                            ->label('Add Selected Items')
+                            ->label(function () {
+                                $count = count($this->selectedItems);
+                                if ($count > 0) {
+                                    return "Add $count Selected Items";
+                                } else {
+                                    return 'Add Menu Items';
+                                }
+                            })
                             ->disabled(fn () => empty($this->selectedItems))
                             ->action(fn () => $this->addMenuItems()),
                     ])
@@ -375,29 +381,6 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                             ->contained(),
                     ]),
             ]);
-    }
-
-    #[Js]
-    public function getActiveTab(): void
-    {
-        $this->js(
-            <<<'JS'
-            let urlParams = new URLSearchParams(window.location.search);
-            let tab = urlParams.get('tab');
-            Livewire.dispatch('setActiveTab', {tab});
-            JS
-        );
-    }
-
-    #[On('setActiveTab')]
-    public function setActiveTab(string $tab): void
-    {
-        if (str_contains($tab, '::')) {
-            [$prefix, $tabName] = explode('::', $tab, 2);
-            $this->activeTab = $prefix;
-        } else {
-            $this->activeTab = $tab;
-        }
     }
 
     public function render(): View
