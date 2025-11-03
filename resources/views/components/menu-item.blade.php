@@ -15,7 +15,7 @@
                         size="sm"
                     >
                         <a target="_blank" href="{{$item->url}}">
-                            {{$item->url}}
+                            {{ str($item->url)->limit(30) }}
                         </a>
                     </x-filament::link>
                 </div>
