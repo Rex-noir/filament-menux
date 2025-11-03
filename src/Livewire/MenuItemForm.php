@@ -13,9 +13,11 @@ use Filament\Actions\Contracts\HasActions;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Text;
 use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
@@ -37,7 +39,6 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
     public function mount(string $menuId): void
     {
         $this->menuId = $menuId;
-        $this->loadMenuxables();
     }
 
     private function loadMenuxables(): void
@@ -59,12 +60,12 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
     /**
      * Build the menuxable data structure for a single model class.
      *
-     * @param  class-string<Menuxable>  $modelClass
+     * @param class-string<Menuxable> $modelClass
      * @return array<string, mixed>
      */
     private function buildMenuxableData(string $modelClass, int $page = 1): array
     {
-        $pagination = $modelClass::getMenuxablesUsing($this->searchQuery, $modelClass::query())->paginate(5);
+        $pagination = $modelClass::getMenuxablesUsing($this->searchQuery, $modelClass::query())->paginate(5, page: $page);
 
         return [
             'items' => collect($pagination->items())->map(function ($item) {
@@ -87,6 +88,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
 
         $plugin = FilamentMenuxPlugin::get();
         $staticMenuItems = $plugin->getStaticMenuItems();
+        $menuxableModels = $plugin->getMenuxableModels();
 
         if ($staticMenuItems->isNotEmpty()) {
             $tabs->push(
@@ -101,6 +103,59 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                         ];
                     })
             );
+        }
+
+        if ($menuxableModels->isNotEmpty()) {
+            $menuxableModels->each(function (string $modelClass) use ($tabs) {
+                /** @var Menuxable $modelClass */
+                $tabs->push(
+                    Tab::make($modelClass::getMenuxLabel())
+                        ->schema(function () use ($modelClass) {
+                            /** @var string $modelClass */
+                            $data = $this->buildMenuxableData($modelClass);
+                            $options = collect($data['items'])->mapWithKeys(function ($item) {
+                                return [$item['url'] => $item['title']];
+                            })->toArray();
+
+                            $pagination = [];
+                            $pagination[] = Action::make('loadPrevious')
+                                ->label('Load Previous')
+                                ->icon(icon: Heroicon::ChevronLeft)
+                                ->link()
+                                ->iconButton()
+                                ->disabled($data['current_page'] <= 1)
+                                ->action(function () use ($modelClass, $data) {
+                                    $this->buildMenuxableData($modelClass, $data['current_page'] - 1);
+                                });
+
+                            $pagination[] = Text::make("Page {$data['current_page']} of {$data['last_page']}");
+
+                            $pagination[] = Action::make('loadMore')
+                                ->label('Load More')
+                                ->icon(icon: Heroicon::ChevronRight)
+                                ->link()
+                                ->iconButton()
+                                ->extraAttributes(['class' => 'fi-ml-auto'])
+                                ->disabled($data['current_page'] >= $data['last_page'])
+                                ->action(function () use ($modelClass, $data) {
+                                    $this->buildMenuxableData($modelClass, $data['current_page'] + 1);
+                                });
+
+                            $components = [
+                                CheckboxList::make('menu_items')
+                                    ->hiddenLabel()
+                                    ->options($options),
+                            ];
+                            if (!empty($pagination)) {
+                                $components[] = Flex::make($pagination)
+                                    ->extraAttributes(['style'=>'text-align: center;'])
+                                    ->columnSpanFull();
+                            }
+
+                            return $components;
+                        })
+                );
+            });
         }
 
         return $tabs->toArray();
