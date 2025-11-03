@@ -109,7 +109,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
     private function buildMenuxableData(string $modelClass, int $page = 1): void
     {
         /** @var Menuxable $modelClass */
-        $pagination = $modelClass::getMenuxablesUsing($this->searchQuery, $modelClass::query())->paginate(5, page: $page);
+        $pagination = $modelClass::getMenuxablesUsing($this->searchQuery, $modelClass::query())->paginate(4, page: $page);
         $this->menuxables[$modelClass] = [
             'items' => collect($pagination->items())->map(function ($item) {
                 return [
@@ -298,6 +298,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                     ->schema([
                         TextInput::make('search')
                             ->label('Search')
+                            ->hiddenLabel()
                             ->placeholder('Search menu items...')
                             ->statePath('searchQuery')
                             ->live(debounce: 500)
