@@ -30,15 +30,16 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
     use InteractsWithActions;
     use InteractsWithSchemas;
 
-    protected string $menuId;
+    public string $menuId;
 
-    protected array $menuxables;
+    public array $menuxables = [];
 
-    protected ?string $searchQuery = null;
+    public ?string $searchQuery = null;
 
     public function mount(string $menuId): void
     {
         $this->menuId = $menuId;
+        $this->loadMenuxables();
     }
 
     private function loadMenuxables(): void
@@ -53,7 +54,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
         $this->menuxables = [];
 
         $menuxableModels->each(function (string $modelClass) {
-            $this->menuxables[$modelClass] = $this->buildMenuxableData($modelClass);
+            $this->buildMenuxableData($modelClass);
         });
     }
 
@@ -61,13 +62,11 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
      * Build the menuxable data structure for a single model class.
      *
      * @param  class-string<Menuxable>  $modelClass
-     * @return array<string, mixed>
      */
-    private function buildMenuxableData(string $modelClass, int $page = 1): array
+    private function buildMenuxableData(string $modelClass, int $page = 1): void
     {
         $pagination = $modelClass::getMenuxablesUsing($this->searchQuery, $modelClass::query())->paginate(5, page: $page);
-
-        return [
+        $this->menuxables[$modelClass] = [
             'items' => collect($pagination->items())->map(function ($item) {
                 return [
                     'title' => $item->getMenuxTitle(),
@@ -111,12 +110,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                 $tabs->push(
                     Tab::make($modelClass::getMenuxLabel())
                         ->schema(function () use ($modelClass) {
-                            /** @var string $modelClass */
-                            $data = $this->buildMenuxableData($modelClass);
-                            $options = collect($data['items'])->mapWithKeys(function ($item) {
-                                return [$item['url'] => $item['title']];
-                            })->toArray();
-
+                            $data = $this->menuxables[$modelClass] ?? [];
                             $pagination = [];
                             $pagination[] = Action::make('loadPrevious')
                                 ->label('Load Previous')
@@ -142,9 +136,14 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
                                 });
 
                             $components = [
-                                CheckboxList::make('menu_items')
+                                CheckboxList::make("{$modelClass}.items")
                                     ->hiddenLabel()
-                                    ->options($options),
+                                    ->options(function () use ($modelClass) {
+                                        $data = $this->menuxables[$modelClass] ?? ['items' => []];
+
+                                        return collect($data['items'])->mapWithKeys(fn ($item) => [$item['url'] => $item['title']])->toArray();
+                                    }),
+
                             ];
                             if (! empty($pagination)) {
                                 $components[] = Flex::make($pagination)
