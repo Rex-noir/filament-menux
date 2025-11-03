@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="flex gap-2 items-center [&_svg]:shrink-0">
-            {{ ($this->editAction)(['title'=>$item->title, 'url'=>$item->url, 'target'=>$item->target])  }}
+            {{ ($this->editAction)(['title'=>$item->title, 'url'=>$item->url, 'target'=>$item->target, 'id'=>$item->id])  }}
             {{--            {{($this->createSubItemAction)(['menuItemId' => $item->id])}}--}}
             {{--            {{($this->duplicateAction)(['menuItemId' => $item->id])}}--}}
             {{--            {{($this->deleteAction)(['menuItemId' => $item->id])}}--}}
