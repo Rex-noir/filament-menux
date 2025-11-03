@@ -3,8 +3,8 @@
 namespace AceREx\FilamentMenux;
 
 use AceREx\FilamentMenux\Commands\FilamentMenuxCommand;
-use AceREx\FilamentMenux\Http\Livewire\MenuItemForm;
-use AceREx\FilamentMenux\Http\Livewire\MenuItemsBuilder;
+use AceREx\FilamentMenux\Livewire\MenuItemForm;
+use AceREx\FilamentMenux\Livewire\MenuItemsBuilder;
 use AceREx\FilamentMenux\Testing\TestsFilamentMenux;
 use Filament\Support\Assets\Asset;
 use Filament\Support\Assets\Js;
@@ -63,7 +63,7 @@ class FilamentMenuxServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void {}
 
-    public function bootingPackage()
+    public function bootingPackage(): void
     {
         Livewire::component('menu-items-builder', MenuItemsBuilder::class);
         Livewire::component('menu-item-form', MenuItemForm::class);

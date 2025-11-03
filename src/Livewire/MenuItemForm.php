@@ -1,6 +1,8 @@
 <?php
 
-namespace AceREx\FilamentMenux\Http\Livewire;
+declare(strict_types=1);
+
+namespace AceREx\FilamentMenux\Livewire;
 
 use AceREx\FilamentMenux\Contracts\Enums\MenuItemTarget;
 use AceREx\FilamentMenux\FilamentMenuxPlugin;
@@ -33,7 +35,7 @@ class MenuItemForm extends \Livewire\Component implements HasActions, HasSchemas
     }
 
     /**
-     * @return array<Illuminate\Support\Traits\TKey,mixed>
+     * @return array
      */
     private function getTabs(): array
     {
