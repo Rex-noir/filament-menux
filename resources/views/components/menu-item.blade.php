@@ -6,16 +6,18 @@
             <div class="border-r-2 border-gray-300 dark:border-gray-800 cursor-pointer bg-grey-400">
                 <x-heroicon-o-arrows-up-down class="w-6 h-6 m-2 handle" />
             </div>
-            <div class="ml-2 flex">
-                <span class="font-medium">{{ $item->title }}</span>
-                {{--                <x-filament::badge size="xs" class="ml-2 px-2" color="gray">--}}
-                {{--                    {{ $item->normalized_type }}--}}
-                {{--                </x-filament::badge>--}}
-                {{--                @if(! $item->is_link_resolved)--}}
-                {{--                    <x-filament::badge size="xs" class="ml-2 px-2" color="danger">--}}
-                {{--                        {{ $item->link_error ?? 'Link cannot be resolved!' }}--}}
-                {{--                    </x-filament::badge>--}}
-                {{--                @endif--}}
+            <div class="ml-2 flex gap-x-3">
+                <span class="font-medium">{{ str($item->title)->limit(30) }}</span>
+                <div>
+                    <x-filament::link
+                        wire:click="openNewUserModal"
+                        tag="button"
+                        weight="light"
+                        size="sm"
+                    >
+                        {{$item->url}}
+                    </x-filament::link>
+                </div>
             </div>
         </div>
         <div class="flex gap-2 items-center [&_svg]:shrink-0">
