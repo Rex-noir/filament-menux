@@ -21,6 +21,11 @@ class MenuResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    public static function getModel(): string
+    {
+        return FilamentMenuxPlugin::get()->getMenuModel();
+    }
+
     public static function getNavigationLabel(): string
     {
         return FilamentMenuxPlugin::get()->getNavigationLabel();

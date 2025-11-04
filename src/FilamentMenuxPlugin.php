@@ -62,7 +62,7 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected string $menusTable = MenusTable::class;
 
-    protected string $menusModel = Menu::class;
+    protected string $menuModel = Menu::class;
 
     protected string $menuItemModel = MenuItem::class;
 
@@ -73,20 +73,20 @@ final class FilamentMenuxPlugin implements Plugin
         $this->menuxableModels = collect();
     }
 
-    public function getMenusModel(): string
+    public function getMenuModel(): string
     {
-        return $this->menusModel;
+        return $this->menuModel;
     }
 
-    public function setMenusModel(string $menusModel): FilamentMenuxPlugin
+    public function setMenusModel(string $menuModel): FilamentMenuxPlugin
     {
-        if (! class_exists($menusModel)) {
-            throw new InvalidArgumentException("Model class {$menusModel} does not exist");
+        if (! class_exists($menuModel)) {
+            throw new InvalidArgumentException("Model class {$menuModel} does not exist");
         }
-        if (! is_subclass_of($menusModel, Menu::class)) {
-            throw new InvalidArgumentException("Model class {$menusModel} must extend {$this->menusModel} class.");
+        if (! is_subclass_of($menuModel, Menu::class)) {
+            throw new InvalidArgumentException("Model class {$menuModel} must extend {$this->menuModel} class.");
         }
-        $this->menusModel = $menusModel;
+        $this->menuModel = $menuModel;
 
         return $this;
     }
