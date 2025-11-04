@@ -62,6 +62,7 @@ return [
         'search' => 'Search',
         'menu_items' => 'Menu Items',
         'custom_menu_item_modal_heading' => 'Add custom menu items directly',
+        'menu_items_builder_heading' => 'Menu Items Builder',
     ],
 
     'empty_state' => [
