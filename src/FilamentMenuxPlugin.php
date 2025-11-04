@@ -10,6 +10,7 @@ use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\Filament\Resources\Menus\MenuResource;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuForm;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm;
+use AceREx\FilamentMenux\Filament\Resources\Menus\Tables\MenusTable;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Contracts\HasLabel;
@@ -57,11 +58,32 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected string $menuForm = MenuForm::class;
 
+    protected string $menusTable = MenusTable::class;
+
     public function __construct()
     {
         // Lazy collection initialization ensures no shared static state.
         $this->staticMenuItems = collect();
         $this->menuxableModels = collect();
+    }
+
+    public function getMenusTable(): string
+    {
+        return $this->menusTable;
+
+    }
+
+    public function setMenusTable(string $menusTable): FilamentMenuxPlugin
+    {
+        if (! class_exists($menusTable)) {
+            throw new InvalidArgumentException("Table class {$menusTable} does not exist");
+        }
+        if (! is_subclass_of($menusTable, MenusTable::class)) {
+            throw new InvalidArgumentException("Table class {$menusTable} is not a valid table.");
+        }
+        $this->menusTable = $menusTable;
+
+        return $this;
     }
 
     public function getMenuForm(): string
