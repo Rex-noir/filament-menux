@@ -25,7 +25,7 @@ class ListMenus extends ListRecords
             return [];
         }
 
-        if ($staticMenus !== null && $staticMenus->isNotEmpty()) {
+        if ($staticMenus->isNotEmpty()) {
 
             return [
                 Action::make('create')
