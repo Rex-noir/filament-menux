@@ -27,7 +27,7 @@
                 value="{{$item->id}}"
                 wire:model="selectedItems"
             />
-            {{ ($this->editAction)(['title'=>$item->title, 'url'=>$item->url, 'target'=>$item->target, 'id'=>$item->id])  }}
+            {{ ($this->editAction)(['title'=>$item->title, 'url'=>$item->url, 'target'=>$item->getRawOriginal('target'), 'id'=>$item->id])  }}
             {{($this->createSubMenuItemAction)(['id' => $item->id])}}
             {{($this->duplicateAction)(['id' => $item->id])}}
             {{($this->deleteAction)(['id' => $item->id])}}
