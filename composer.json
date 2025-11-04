@@ -1,15 +1,17 @@
 {
     "name": "acerex/filament-menux",
-    "description": "Good or bad, you decide.",
+    "description": "Another menu builder plugin for filament php",
     "keywords": [
         "AceREx",
-        "laravel",
-        "filament-menux"
+        "laravel-12",
+        "filament-menux",
+        "filament-menu-builder",
+        "filament-v4"
     ],
-    "homepage": "https://github.com/acerex/filament-menux",
+    "homepage": "https://github.com/Rex-noir/filament-menux",
     "support": {
-        "issues": "https://github.com/acerex/filament-menux/issues",
-        "source": "https://github.com/acerex/filament-menux"
+        "issues": "https://github.com/Rex-noir/filament-menux/issues",
+        "source": "https://github.com/Rex-noir/filament-menux"
     },
     "license": "MIT",
     "authors": [
