@@ -11,6 +11,8 @@ use AceREx\FilamentMenux\Filament\Resources\Menus\MenuResource;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuForm;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Tables\MenusTable;
+use AceREx\FilamentMenux\Models\Menu;
+use AceREx\FilamentMenux\Models\MenuItem;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Contracts\HasLabel;
@@ -60,11 +62,50 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected string $menusTable = MenusTable::class;
 
+    protected string $menusModel = Menu::class;
+
+    protected string $menuItemModel = MenuItem::class;
+
     public function __construct()
     {
         // Lazy collection initialization ensures no shared static state.
         $this->staticMenuItems = collect();
         $this->menuxableModels = collect();
+    }
+
+    public function getMenusModel(): string
+    {
+        return $this->menusModel;
+    }
+
+    public function setMenusModel(string $menusModel): FilamentMenuxPlugin
+    {
+        if (! class_exists($menusModel)) {
+            throw new InvalidArgumentException("Model class {$menusModel} does not exist");
+        }
+        if (! is_subclass_of($menusModel, Menu::class)) {
+            throw new InvalidArgumentException("Model class {$menusModel} must extend {$this->menusModel} class.");
+        }
+        $this->menusModel = $menusModel;
+
+        return $this;
+    }
+
+    public function getMenuItemModel(): string
+    {
+        return $this->menuItemModel;
+    }
+
+    public function setMenuItemModel(string $menuItemModel): FilamentMenuxPlugin
+    {
+        if (! class_exists($menuItemModel)) {
+            throw new InvalidArgumentException("Model class {$menuItemModel} does not exist");
+        }
+        if (! is_subclass_of($menuItemModel, MenuItem::class)) {
+            throw new InvalidArgumentException("Model class {$menuItemModel} must extend {$this->menuItemModel} class.");
+        }
+        $this->menuItemModel = $menuItemModel;
+        return $this;
     }
 
     public function getMenusTable(): string
