@@ -8,4 +8,5 @@
             @livewire('menu-items-builder', ['menuId'=>$this->record->id])
         </div>
     </div>
+    <x-filament-actions::modals />
 </x-filament-panels::page>

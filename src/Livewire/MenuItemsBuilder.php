@@ -137,10 +137,11 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         return Action::make('newCustomMenuItem')
             ->icon(icon: Heroicon::PlusCircle)
             ->label(__('menux.actions.add_item'))
-            ->iconButton()
+            ->size(Size::Small)
             ->tooltip(__('menux.actions.add_item'))
             ->modalHeading(__('menux.labels.custom_menu_item_modal_heading'))
             ->modalWidth(width: Width::Small)
+            ->modalSubmitActionLabel(__('menux.actions.save'))
             ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
             ->action(function ($data) {
                 MenuItem::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
@@ -148,8 +149,8 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                     ->success()
                     ->title(__('menux.notifications.menu_item_created.title'))
                     ->send();
-                $this->dispatch(MenuxEvents::CREATED->value, menuId: $this->menuId, ids: [$data['title']]);
-            });
+            })
+            ->iconButton();
 
     }
 
