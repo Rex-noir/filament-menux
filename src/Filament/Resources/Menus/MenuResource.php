@@ -23,10 +23,7 @@ class MenuResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    /**
-     * @return string|null
-     */
-    public static function getNavigationLabel(): ?string
+    public static function getNavigationLabel(): string
     {
         return FilamentMenuxPlugin::get()->getNavigationLabel();
     }

@@ -66,7 +66,7 @@ final class FilamentMenuxPlugin implements Plugin
 
     }
 
-    public function getNavigationLabel(): string
+    public function getNavigationLabel(): ?string
     {
         return $this->navigationLabel ?? 'Menus';
     }
