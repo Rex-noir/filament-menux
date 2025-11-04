@@ -25,8 +25,7 @@
             <x-filament::input.checkbox
                 x-tooltip="'{{__('menux.actions.select')}}'"
                 value="{{$item->id}}"
-                :checked="$this->isSelected($item->id)"
-
+                wire:model="selectedItems"
             />
             {{ ($this->editAction)(['title'=>$item->title, 'url'=>$item->url, 'target'=>$item->target, 'id'=>$item->id])  }}
             {{($this->createSubMenuItemAction)(['id' => $item->id])}}
