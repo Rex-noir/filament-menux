@@ -40,7 +40,10 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         return ! empty($allIds) && count($this->selectedItems) === count($allIds);
 
     }
-
+    public function isSelected(int $id): bool
+    {
+        return in_array($id, $this->selectedItems, true);
+    }
     public function toggleSelectAll(bool $checked): void
     {
         $allIds = $this->items()->toFlatTree()->pluck('id')
@@ -94,6 +97,26 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 });
             })
             ->iconButton();
+    }
+
+    public function addCustomMenuItemAction(): Action
+    {
+        return Action::make('newItem')
+            ->icon(icon: Heroicon::PlusCircle)
+            ->label(__('menux.actions.add_items'))
+            ->iconButton()
+            ->modalHeading(__('menux.labels.custom_menu_item_modal_heading'))
+            ->modalWidth(width: Width::Small)
+            ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
+            ->action(function ($data) {
+                MenuItem::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
+                Notification::make('menuItemCreated')
+                    ->success()
+                    ->title(__('menux.notifications.menu_item_created.title'))
+                    ->send();
+                $this->dispatch(MenuxEvents::CREATED->value, menuId: $this->menuId, ids: [$data['title']]);
+            });
+
     }
 
     public function createSubMenuItemAction(): Action
