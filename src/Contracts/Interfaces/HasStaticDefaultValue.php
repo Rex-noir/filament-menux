@@ -4,6 +4,6 @@ namespace AceREx\FilamentMenux\Contracts\Interfaces;
 
 interface HasStaticDefaultValue
 {
-    public static function getStaticDefaultValue(): static;
+    public static function getStaticDefaultValue(): HasStaticDefaultValue;
 
 }
