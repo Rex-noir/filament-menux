@@ -132,12 +132,13 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->iconButton();
     }
 
-    public function addCustomMenuItemAction(): Action
+    public function addCustomAction(): Action
     {
-        return Action::make('newItem')
+        return Action::make('newCustomMenuItem')
             ->icon(icon: Heroicon::PlusCircle)
-            ->label(__('menux.actions.add_items'))
+            ->label(__('menux.actions.add_item'))
             ->iconButton()
+            ->tooltip(__('menux.actions.add_item'))
             ->modalHeading(__('menux.labels.custom_menu_item_modal_heading'))
             ->modalWidth(width: Width::Small)
             ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())

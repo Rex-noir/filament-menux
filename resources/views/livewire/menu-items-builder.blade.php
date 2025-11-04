@@ -1,5 +1,5 @@
 <div>
-    <x-filament::section compact>
+    <x-filament::section compact="">
         <x-slot name="heading">
             {{__('menux.labels.menu_items_builder_heading')}}
         </x-slot>
@@ -7,11 +7,12 @@
         <x-slot name="afterHeader">
             <div class="flex items-center justify-end gap-2">
                 <x-filament::input.checkbox
-                    x-tooltip="'{{__('menux.actions.select_all')}}'"
-                    wire.model="allSelected"
-                    wire:click="toggleSelectAll($event.target.checked)"
+                        x-tooltip="'{{__('menux.actions.select_all')}}'"
+                        wire.model="allSelected"
+                        wire:click="toggleSelectAll($event.target.checked)"
                 />
                 {{$this->deleteSelectedAction}}
+                {{ $this->addCustomAction  }}
             </div>
         </x-slot>
 
@@ -62,17 +63,19 @@
                     </div>
                 </div>
             @else
-                <div class="text-gray-500 text-center">
-                    <p>
-                        {{ __('filament-menu-builder::menu-builder.empty_menu_items_hint_1') }}
-                    </p>
-                    <p>
-                        {{ __('filament-menu-builder::menu-builder.empty_menu_items_hint_2') }}
-                    </p>
-                </div>
+                <x-filament::empty-state icon="heroicon-{{\Filament\Support\Icons\Heroicon::OutlinedNoSymbol->value}}"
+                                         color="gray">
+                    <x-slot name="heading">
+                        {{__('menux.empty_state.description')}}
+                    </x-slot>
+                    <x-slot name="footer">
+                        <x-filament::button wire:click="mountAction('newCustomMenuItem')" icon="heroicon-m-plus">
+                            Add One Now!
+                        </x-filament::button>
+                    </x-slot>
+                </x-filament::empty-state>
             @endif
         </form>
-
     </x-filament::section>
     <x-filament-actions::modals />
 </div>

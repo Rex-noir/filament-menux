@@ -25,6 +25,7 @@ return [
         'duplicate' => 'Duplicate',
         'new_item' => 'New Custom Menu Item',
         'add_items' => 'Add Menu Items',
+        'add_item' => 'Add New Item',
         'add_selected' => 'Add :count Selected Items',
         'load_previous' => 'Load Previous',
         'delete' => 'Delete',
