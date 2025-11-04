@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace AceREx\FilamentMenux;
 
+use AceREx\FilamentMenux\Contracts\Enums\MenuxActionType;
 use AceREx\FilamentMenux\Contracts\Enums\MenuxLinkTarget;
+use AceREx\FilamentMenux\Contracts\Interfaces\ActionModifier;
 use AceREx\FilamentMenux\Contracts\Interfaces\HasStaticDefaultValue;
 use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\Filament\Resources\Menus\MenuResource;
@@ -66,11 +68,44 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected string $menuItemModel = MenuItem::class;
 
+    protected Collection $actionModifiers;
+
     public function __construct()
     {
         // Lazy collection initialization ensures no shared static state.
         $this->staticMenuItems = collect();
         $this->menuxableModels = collect();
+        $this->actionModifiers = collect();
+    }
+
+    public function getActionModifier(MenuxActionType $actionType): ?ActionModifier
+    {
+        return $this->actionModifiers->get($actionType);
+
+    }
+
+    public function hasActionModifier(MenuxActionType $actionType): bool
+    {
+        return $this->actionModifiers->has($actionType);
+
+    }
+
+    public function setActionModifier(MenuxActionType $actionType, string | ActionModifier $modifier): FilamentMenuxPlugin
+    {
+        if (is_string($modifier)) {
+            if (! class_exists($modifier)) {
+                throw new InvalidArgumentException("Class {$modifier} does not exist");
+            }
+
+            if (! in_array(ActionModifier::class, class_implements($modifier))) {
+                throw new InvalidArgumentException("{$modifier} must implement " . ActionModifier::class . '.');
+            }
+            $modifier = app($modifier);
+        }
+        $this->actionModifiers->put($actionType, $modifier);
+
+        return $this;
+
     }
 
     public function getMenuModel(): string
