@@ -15,7 +15,9 @@ class MenusTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Menu Name')->sortable()->searchable(),
+                TextColumn::make('name')
+                    ->label('name')
+                    ->sortable()->searchable(),
             ])
             ->filters([
                 //
