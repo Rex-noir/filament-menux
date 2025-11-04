@@ -119,7 +119,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             })
             ->icon(Heroicon::Trash)
             ->color('danger')
-            ->disabled(fn () => !$this->atLeastOneItemIsSelected())
+            ->disabled(fn () => ! $this->atLeastOneItemIsSelected())
             ->requiresConfirmation()
             ->modalHeading(__('menux.labels.menu_items_delete_selected_action_heading', ['count' => count($this->selectedItems)]))
             ->tooltip('Delete')
@@ -134,8 +134,6 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             })
             ->iconButton();
     }
-
-
 
     public function atLeastOneItemIsSelected(): bool
     {
