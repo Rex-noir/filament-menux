@@ -36,6 +36,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
     ];
 
     protected string $menuItemForm = MenuItemForm::class;
+
     protected string $itemModel = MenuItem::class;
 
     public function getAllSelectedProperty(): bool

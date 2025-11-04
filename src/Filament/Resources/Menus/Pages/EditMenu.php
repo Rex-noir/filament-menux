@@ -30,6 +30,7 @@ class EditMenu extends Page implements HasForms
     {
         /** @var MenuForm $menuForm */
         $menuForm = FilamentMenuxPlugin::get()->getMenuForm();
+
         return $schema
             ->components($menuForm::configure())
             ->model(Menu::class)

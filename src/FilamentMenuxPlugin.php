@@ -105,6 +105,7 @@ final class FilamentMenuxPlugin implements Plugin
             throw new InvalidArgumentException("Model class {$menuItemModel} must extend {$this->menuItemModel} class.");
         }
         $this->menuItemModel = $menuItemModel;
+
         return $this;
     }
 
