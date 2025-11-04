@@ -133,7 +133,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->fillForm(function ($arguments) {
                 return $arguments;
             })
-            ->modalSubmitActionLabel('Save')
+            ->modalSubmitActionLabel(__('menux.actions.save'))
             ->action(function ($data, $arguments) {
                 MenuItem::where('id', $arguments['id'])->update($data);
             })
