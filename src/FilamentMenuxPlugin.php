@@ -55,7 +55,6 @@ final class FilamentMenuxPlugin implements Plugin
     public function getLinkTargetEnum(): string
     {
         return $this->linkTargetEnum;
-
     }
 
     public function setLinkTargetEnum(string $linkTargetEnum): FilamentMenuxPlugin
