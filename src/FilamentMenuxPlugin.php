@@ -15,6 +15,7 @@ use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Tables\MenusTable;
 use AceREx\FilamentMenux\Models\Menu;
 use AceREx\FilamentMenux\Models\MenuItem;
+use Filament\Actions\Action;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Contracts\HasLabel;
@@ -106,6 +107,30 @@ final class FilamentMenuxPlugin implements Plugin
 
         return $this;
 
+    }
+
+    public function setActionModifierUsing(MenuxActionType $actionType, callable $modifier): FilamentMenuxPlugin
+    {
+        $modifierClass = new class($modifier) implements ActionModifier
+        {
+            private $modifier;
+
+            public function __construct(callable $modifier)
+            {
+                $this->modifier = $modifier;
+            }
+
+            public function modify(Action $action): Action
+            {
+                $callable = $this->modifier;
+
+                return $callable($action);
+
+            }
+        };
+        $this->setActionModifier($actionType, $modifierClass);
+
+        return $this;
     }
 
     public function getMenuModel(): string

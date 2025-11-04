@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace AceREx\FilamentMenux\Livewire;
 
+use AceREx\FilamentMenux\Contracts\Enums\MenuxActionType;
 use AceREx\FilamentMenux\Contracts\Enums\MenuxEvents;
+use AceREx\FilamentMenux\Contracts\Traits\HasActionModifier;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm;
 use AceREx\FilamentMenux\FilamentMenuxPlugin;
 use AceREx\FilamentMenux\Models\MenuItem;
@@ -22,6 +24,7 @@ use Livewire\Component;
 
 class MenuItemsBuilder extends Component implements HasActions, HasSchemas
 {
+    use HasActionModifier;
     use InteractsWithActions;
     use InteractsWithSchemas;
 
@@ -99,7 +102,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
 
     public function deleteAction(): Action
     {
-        return Action::make('deleteAction')
+        $action = Action::make('deleteAction')
             ->size(Size::Small)
             ->icon(Heroicon::Trash)
             ->color('danger')
@@ -115,11 +118,13 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                     $item->delete();
                 });
             });
+
+        return $this->applyActionModifier($action, MenuxActionType::DELETE_MENU_ITEM);
     }
 
     public function deleteSelectedAction(): Action
     {
-        return Action::make('deleteSelectedAction')
+        $action = Action::make('deleteSelectedAction')
             ->size(Size::Small)
             ->tooltip(function () {
                 $selected = count($this->selectedItems);
@@ -142,6 +147,8 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 $this->selectedItems = [];
             })
             ->iconButton();
+
+        return $this->applyActionModifier($action, MenuxActionType::DELETE_SELECTED_MENU_ITEMS);
     }
 
     public function atLeastOneItemIsSelected(): bool
@@ -160,7 +167,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
 
     public function addCustomAction(): Action
     {
-        return Action::make('addCustomAction')
+        $action = Action::make('addCustomAction')
             ->icon(icon: Heroicon::PlusCircle)
             ->label(__('menux.actions.add_item'))
             ->size(Size::Small)
@@ -178,11 +185,12 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             })
             ->iconButton();
 
+        return $this->applyActionModifier($action, MenuxActionType::ADD_CUSTOM_MENU_ITEM);
     }
 
     public function createSubMenuItemAction(): Action
     {
-        return Action::make('createSubMenuItemAction')
+        $action = Action::make('createSubMenuItemAction')
             ->size(Size::Small)
             ->icon(Heroicon::ChevronDoubleDown)
             ->label(__('menux.actions.add_sub_menu_item'))
@@ -195,11 +203,13 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 $item = $this->itemModel::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
                 $parent->appendNode($item);
             });
+
+        return $this->applyActionModifier($action, MenuxActionType::CREATE_SUB_MENU_ITEM);
     }
 
     public function duplicateAction(): Action
     {
-        return Action::make('duplicateAction')
+        $action = Action::make('duplicateAction')
             ->size(Size::Small)
             ->icon(Heroicon::ServerStack)
             ->label(__('menux.actions.duplicate'))
@@ -221,11 +231,12 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 $replica->insertAfterNode($item);
             });
 
+        return $this->applyActionModifier($action, MenuxActionType::DUPLICATE__MENU_ITEM);
     }
 
     public function editAction(): Action
     {
-        return Action::make('editAction')
+        $action = Action::make('editAction')
             ->size(Size::Small)
             ->icon(Heroicon::PencilSquare)
             ->tooltip(__('menux.actions.edit'))
@@ -239,6 +250,8 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 MenuItem::where('id', $arguments['id'])->update($data);
             })
             ->iconButton();
+
+        return $this->applyActionModifier($action, MenuxActionType::EDIT_MENU_ITEM);
     }
 
     public function render(): \Illuminate\Contracts\View\View | \Illuminate\Contracts\View\Factory | \Illuminate\View\View
