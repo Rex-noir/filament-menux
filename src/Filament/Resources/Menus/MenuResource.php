@@ -7,12 +7,14 @@ use AceREx\FilamentMenux\Filament\Resources\Menus\Pages\EditMenu;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Pages\ListMenus;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuForm;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Tables\MenusTable;
+use AceREx\FilamentMenux\FilamentMenuxPlugin;
 use AceREx\FilamentMenux\Models\Menu;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class MenuResource extends Resource
 {
@@ -21,6 +23,11 @@ class MenuResource extends Resource
     protected static string | BackedEnum | null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getNavigationGroup(): string | UnitEnum | null
+    {
+        return FilamentMenuxPlugin::get()->getResourceNavigationGroup();
+    }
 
     public static function form(Schema $schema): Schema
     {
