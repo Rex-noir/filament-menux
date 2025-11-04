@@ -44,9 +44,9 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         MenuItem::rebuildTree($this->data);
 
         Notification::make()
-            ->title('Menu items saved successfully.')
+            ->title(__('menux.notifications.items_saved.title'))
             ->success()
-            ->send();
+            ->send(); /**/
     }
 
     public function items(): \LaravelIdea\Helper\AceREx\FilamentMenux\Models\_IH_MenuItem_C | \Illuminate\Database\Eloquent\Collection | array
@@ -65,7 +65,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->size(Size::Small)
             ->icon(Heroicon::Trash)
             ->color('danger')
-            ->tooltip('Delete')
+            ->tooltip(__('menux.actions.delete'))
             ->requiresConfirmation()
             ->tooltip('Delete')
             ->action(function ($arguments) {
@@ -82,11 +82,11 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         return Action::make('createSubMenuItemAction')
             ->size(Size::Small)
             ->icon(Heroicon::ChevronDoubleDown)
-            ->tooltip('Create Sub MenuItem')
-            ->modalHeading('Create Sub Menu Item')
+            ->tooltip(__('menux.actions.add_sub_menu_item'))
+            ->modalHeading(__('menux.actions.add_sub_menu_item'))
             ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
             ->modalWidth(Width::Medium)
-            ->modalSubmitActionLabel('Save')
+            ->modalSubmitActionLabel(__('menux.actions.save'))
             ->action(function ($data, $arguments) {
                 $parent = MenuItem::findOrFail($arguments['id']);
                 $item = MenuItem::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
@@ -100,10 +100,10 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         return Action::make('duplicateAction')
             ->size(Size::Small)
             ->icon(Heroicon::ServerStack)
-            ->tooltip('Duplicate')
+            ->tooltip(__('menux.actions.duplicate'))
             ->iconButton()
             ->requiresConfirmation()
-            ->modalHeading('Duplicate Menu Item?')
+            ->modalHeading(__('menux.modals.duplicate.title'))
             ->action(function ($arguments) {
                 $id = $arguments['id'];
                 $item = MenuItem::findOrFail($id);
@@ -127,7 +127,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         return Action::make('editAction')
             ->size(Size::Small)
             ->icon(Heroicon::PencilSquare)
-            ->tooltip('Edit')
+            ->tooltip(__('menux.actions.edit'))
             ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
             ->modalWidth(Width::Medium)
             ->fillForm(function ($arguments) {

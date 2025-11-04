@@ -27,7 +27,17 @@ return [
         'add_items' => 'Add Menu Items',
         'add_selected' => 'Add :count Selected Items',
         'load_previous' => 'Load Previous',
+        'delete' => 'Delete',
+        'add_sub_menu_item' => 'Add Sub Menu Item',
+        'edit' => 'Edit',
+        'save' => 'Save',
         'load_more' => 'Load More',
+    ],
+
+    'modals' => [
+        'duplicate' => [
+            'title' => 'Duplicate Menu Item?',
+        ],
     ],
 
     'notifications' => [
@@ -38,6 +48,9 @@ return [
         'items_added' => [
             'title' => 'Menu items added successfully',
             'body' => 'Total items added: :count',
+        ],
+        'items_saved' => [
+            'title' => 'Menu items saved successfully',
         ],
     ],
 
