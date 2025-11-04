@@ -45,11 +45,27 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected int $perPage = 4;
 
+    protected ?string $resourceNavigationGroup = null;
+
     public function __construct()
     {
         // Lazy collection initialization ensures no shared static state.
         $this->staticMenuItems = collect();
         $this->menuxableModels = collect();
+    }
+
+    public function getResourceNavigationGroup(): ?string
+    {
+        return $this->resourceNavigationGroup;
+
+    }
+
+    public function setResourceNavigationGroup(?string $resourceNavigationGroup): FilamentMenuxPlugin
+    {
+        $this->resourceNavigationGroup = $resourceNavigationGroup;
+
+        return $this;
+
     }
 
     public function getLinkTargetEnum(): string
