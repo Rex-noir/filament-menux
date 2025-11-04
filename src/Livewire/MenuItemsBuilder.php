@@ -134,7 +134,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
 
     public function addCustomAction(): Action
     {
-        return Action::make('newCustomMenuItem')
+        return Action::make('addCustomAction')
             ->icon(icon: Heroicon::PlusCircle)
             ->label(__('menux.actions.add_item'))
             ->size(Size::Small)

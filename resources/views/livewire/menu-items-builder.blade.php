@@ -69,7 +69,7 @@
                         {{__('menux.empty_state.description')}}
                     </x-slot>
                     <x-slot name="footer">
-                        <x-filament::button wire:click="mountAction('newCustomMenuItem')" icon="heroicon-m-plus">
+                        <x-filament::button wire:click="mountAction('addCustomAction')" icon="heroicon-m-plus">
                             Add One Now!
                         </x-filament::button>
                     </x-slot>
