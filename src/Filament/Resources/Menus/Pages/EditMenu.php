@@ -6,6 +6,7 @@ namespace AceREx\FilamentMenux\Filament\Resources\Menus\Pages;
 
 use AceREx\FilamentMenux\Filament\Resources\Menus\MenuResource;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuForm;
+use AceREx\FilamentMenux\FilamentMenuxPlugin;
 use AceREx\FilamentMenux\Models\Menu;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
@@ -27,8 +28,10 @@ class EditMenu extends Page implements HasForms
 
     public function form(Schema $schema): Schema
     {
+        /** @var MenuForm $menuForm */
+        $menuForm = FilamentMenuxPlugin::get()->getMenuForm();
         return $schema
-            ->components(MenuForm::configure())
+            ->components($menuForm::configure())
             ->model(Menu::class)
             ->statePath('data');
     }
