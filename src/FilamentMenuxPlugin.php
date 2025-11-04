@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace AceREx\FilamentMenux;
 
+use AceREx\FilamentMenux\Contracts\Enums\MenuItemTarget;
 use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\Filament\Resources\Menus\MenuResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Filament\Support\Contracts\HasLabel;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
-
-use function Livewire\of;
 
 final class FilamentMenuxPlugin implements Plugin
 {
@@ -40,6 +40,8 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected Collection $menuxableModels;
 
+    protected string $linkTargetEnum = MenuItemTarget::class;
+
     protected int $perPage = 4;
 
     public function __construct()
@@ -47,6 +49,26 @@ final class FilamentMenuxPlugin implements Plugin
         // Lazy collection initialization ensures no shared static state.
         $this->staticMenuItems = collect();
         $this->menuxableModels = collect();
+    }
+
+    public function getLinkTargetEnum(): string
+    {
+        return $this->linkTargetEnum;
+
+    }
+
+    public function setLinkTargetEnum(string $linkTargetEnum): FilamentMenuxPlugin
+    {
+        if (! enum_exists($linkTargetEnum)) {
+            throw new InvalidArgumentException("Enum class {$linkTargetEnum} does not exist");
+        }
+
+        if (! in_array(HasLabel::class, class_implements($linkTargetEnum), true)) {
+            throw new InvalidArgumentException("{$linkTargetEnum} must implement " . HasLabel::class . '.');
+        }
+        $this->linkTargetEnum = $linkTargetEnum;
+
+        return $this;
     }
 
     public function getPerPage(): int

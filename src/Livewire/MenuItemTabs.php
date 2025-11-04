@@ -64,7 +64,6 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
 
             return;
         }
-
         $this->staticItems = $staticMenuItems->map(function ($item, $id) {
             return [
                 'id' => $id,

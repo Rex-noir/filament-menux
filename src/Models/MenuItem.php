@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AceREx\FilamentMenux\Models;
 
-use AceREx\FilamentMenux\Contracts\Enums\MenuItemTarget;
+use AceREx\FilamentMenux\FilamentMenuxPlugin;
 use Illuminate\Database\Eloquent\Model;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -22,8 +22,9 @@ class MenuItem extends Model
 
     public function casts(): array
     {
+        $enum = FilamentMenuxPlugin::get()->getLinkTargetEnum();
         return [
-            'target' => MenuItemTarget::class,
+            'target' => $enum,
         ];
 
     }
