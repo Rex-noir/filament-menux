@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AceREx\FilamentMenux\Livewire;
 
-use AceREx\FilamentMenux\Contracts\Enums\MenuItemTarget;
+use AceREx\FilamentMenux\Contracts\Enums\MenuxLinkTarget;
 use AceREx\FilamentMenux\Contracts\Enums\MenuxEvents;
 use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\FilamentMenuxPlugin;
@@ -69,7 +69,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
                 'id' => $id,
                 'title' => $item['label'],
                 'url' => $item['url'] ?? '#',
-                'target' => $item['target']?->value ?? MenuItemTarget::SELF->value,
+                'target' => $item['target']?->value ?? MenuxLinkTarget::SELF->value,
                 'type' => 'static',
             ];
         })->toArray();
@@ -256,7 +256,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
 
         $itemsToAdd = collect($this->selectedItems)->mapWithKeys(function ($item, $index) use ($items) {
             $itemData = $items->get($item);
-            $itemData['target'] = MenuItemTarget::tryFrom($itemData['target']) ?? MenuItemTarget::SELF;
+            $itemData['target'] = MenuxLinkTarget::tryFrom($itemData['target']) ?? MenuxLinkTarget::SELF;
             $itemData['menu_id'] = $this->menuId;
             unset($itemData['id']);
             unset($itemData['type']);

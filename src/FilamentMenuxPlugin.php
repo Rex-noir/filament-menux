@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AceREx\FilamentMenux;
 
-use AceREx\FilamentMenux\Contracts\Enums\MenuItemTarget;
+use AceREx\FilamentMenux\Contracts\Enums\MenuxLinkTarget;
 use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\Filament\Resources\Menus\MenuResource;
 use Filament\Contracts\Plugin;
@@ -40,7 +40,7 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected Collection $menuxableModels;
 
-    protected string $linkTargetEnum = MenuItemTarget::class;
+    protected string $linkTargetEnum = MenuxLinkTarget::class;
 
     protected int $perPage = 4;
 

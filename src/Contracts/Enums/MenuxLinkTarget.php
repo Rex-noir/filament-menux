@@ -6,7 +6,7 @@ namespace AceREx\FilamentMenux\Contracts\Enums;
 
 use Filament\Support\Contracts\HasLabel;
 
-enum MenuItemTarget: string implements HasLabel
+enum MenuxLinkTarget: string implements HasLabel
 {
     case BLANK = '_blank';
     case SELF = '_self';
