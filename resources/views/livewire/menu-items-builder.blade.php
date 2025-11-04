@@ -5,10 +5,14 @@
         </x-slot>
 
         <x-slot name="afterHeader">
-            <x-filament::input.checkbox
-                x-tooltip="'{{__('menux.actions.select_all')}}'"
-                wire.model="allSelected" wire:click="toggleSelectAll($event.target.checked)"
-            />
+            <div class="flex items-center justify-end gap-2">
+                <x-filament::input.checkbox
+                    x-tooltip="'{{__('menux.actions.select_all')}}'"
+                    wire.model="allSelected"
+                    wire:click="toggleSelectAll($event.target.checked)"
+                />
+                {{$this->deleteSelectedAction}}
+            </div>
         </x-slot>
 
         <form wire:submit="save" x-data="{

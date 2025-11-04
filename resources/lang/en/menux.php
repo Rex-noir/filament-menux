@@ -28,6 +28,7 @@ return [
         'add_selected' => 'Add :count Selected Items',
         'load_previous' => 'Load Previous',
         'delete' => 'Delete',
+        'delete_selected' => 'Delete :count Selected Items',
         'add_sub_menu_item' => 'Add Sub Menu Item',
         'edit' => 'Edit',
         'save' => 'Save',
@@ -54,6 +55,10 @@ return [
         'items_saved' => [
             'title' => 'Menu items saved successfully',
         ],
+        'menu_items_deleted' => [
+            'title' => 'Menu items deleted successfully',
+            'body' => 'Total items deleted: :count',
+        ],
     ],
 
     'placeholders' => [
@@ -65,6 +70,7 @@ return [
         'menu_items' => 'Menu Items',
         'custom_menu_item_modal_heading' => 'Add custom menu items directly',
         'menu_items_builder_heading' => 'Menu Items Builder',
+        'menu_items_delete_selected_action_heading' => 'Delete selected menu items? Total : :count',
     ],
 
     'empty_state' => [

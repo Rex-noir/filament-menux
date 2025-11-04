@@ -54,7 +54,6 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 ->merge($item->descendants()->pluck('id'));
         })->toArray();
 
-
         $this->selectedItems = $checked ? $allIds : [];
     }
 
@@ -102,6 +101,33 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 MenuItem::descendantsAndSelf($id)->each(function ($item) {
                     $item->delete();
                 });
+            })
+            ->iconButton();
+    }
+
+    public function deleteSelectedAction(): Action
+    {
+        return Action::make('deleteSelectedAction')
+            ->size(Size::Small)
+            ->tooltip(function () {
+                $selected = count($this->selectedItems);
+
+                return __('menux.actions.delete_selected', ['count' => $selected]) . ' (' . implode(', ', $this->selectedItems) . ')';
+            })
+            ->icon(Heroicon::Trash)
+            ->disabled($this->selectedItems === [])
+            ->color('danger')
+            ->requiresConfirmation()
+            ->modalHeading(__('menux.labels.menu_items_delete_selected_action_heading', ['count' => count($this->selectedItems)]))
+            ->tooltip('Delete')
+            ->action(function ($arguments) {
+                MenuItem::whereIn('id', $this->selectedItems)->delete();
+                Notification::make('menuItemsDeleted')
+                    ->title(__('menux.notifications.menu_items_deleted.title'))
+                    ->body(__('menux.notifications.menu_items_deleted.body', ['count' => count($this->selectedItems)]))
+                    ->success()
+                    ->send();
+                $this->selectedItems = [];
             })
             ->iconButton();
     }
