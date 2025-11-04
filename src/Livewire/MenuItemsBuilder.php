@@ -40,14 +40,20 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         return ! empty($allIds) && count($this->selectedItems) === count($allIds);
 
     }
+
     public function isSelected(int $id): bool
     {
         return in_array($id, $this->selectedItems, true);
     }
+
     public function toggleSelectAll(bool $checked): void
     {
-        $allIds = $this->items()->toFlatTree()->pluck('id')
-            ->toArray();
+        $allIds = $this->items()->flatMap(function (MenuItem $item) {
+            // Collect this item's ID and all its descendant IDs
+            return collect([$item->id])
+                ->merge($item->descendants()->pluck('id'));
+        })->toArray();
+
 
         $this->selectedItems = $checked ? $allIds : [];
     }
@@ -74,6 +80,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
     public function items(): \LaravelIdea\Helper\AceREx\FilamentMenux\Models\_IH_MenuItem_C | \Illuminate\Database\Eloquent\Collection | array
     {
         $query = MenuItem::query()
+            ->with('children')
             ->where('menu_id', $this->menuId);
 
         $items = $query->defaultOrder()->get();
