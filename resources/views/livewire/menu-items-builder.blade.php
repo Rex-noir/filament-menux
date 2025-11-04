@@ -1,11 +1,11 @@
 <div>
-    <x-filament::section compact="">
+    <x-filament::section compact="" secondary="">
         <x-slot name="heading">
             {{__('menux.labels.menu_items_builder_heading')}}
         </x-slot>
 
         <x-slot name="afterHeader">
-            <div class="flex items-center justify-end gap-2">
+            <div class="flex items-center justify-end gap-2 mr-2.5">
                 <x-filament::input.checkbox
                         x-tooltip="'{{__('menux.actions.select_all')}}'"
                         wire.model="allSelected"

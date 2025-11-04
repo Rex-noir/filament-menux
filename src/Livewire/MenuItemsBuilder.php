@@ -98,6 +98,9 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->requiresConfirmation()
             ->tooltip('Delete')
             ->action(function ($arguments) {
+                if (count($this->selectedItems) <= 0) {
+                    return;
+                }
                 $id = $arguments['id'];
                 MenuItem::descendantsAndSelf($id)->each(function ($item) {
                     $item->delete();
@@ -115,8 +118,8 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 return __('menux.actions.delete_selected', ['count' => $selected]) . ' (' . implode(', ', $this->selectedItems) . ')';
             })
             ->icon(Heroicon::Trash)
-            ->disabled($this->selectedItems === [])
             ->color('danger')
+            ->disabled(fn () => !$this->atLeastOneItemIsSelected())
             ->requiresConfirmation()
             ->modalHeading(__('menux.labels.menu_items_delete_selected_action_heading', ['count' => count($this->selectedItems)]))
             ->tooltip('Delete')
@@ -130,6 +133,13 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 $this->selectedItems = [];
             })
             ->iconButton();
+    }
+
+
+
+    public function atLeastOneItemIsSelected(): bool
+    {
+        return count($this->selectedItems) > 0;
     }
 
     public function actionGroup(MenuItem $item): ActionGroup

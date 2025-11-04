@@ -25,7 +25,7 @@
             <x-filament::input.checkbox
                 x-tooltip="'{{__('menux.actions.select')}}'"
                 value="{{$item->id}}"
-                wire:model="selectedItems"
+                wire:model.change="selectedItems"
             />
             {{ ($this->editAction)(['title'=>$item->title, 'url'=>$item->url, 'target'=>$item->getRawOriginal('target'), 'id'=>$item->id])  }}
             {{ $this->actionGroup($item) }}
