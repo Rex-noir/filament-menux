@@ -49,11 +49,26 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected null | string | \BackedEnum $navigationIcon = null;
 
+    protected ?string $navigationLabel = null;
+
     public function __construct()
     {
         // Lazy collection initialization ensures no shared static state.
         $this->staticMenuItems = collect();
         $this->menuxableModels = collect();
+    }
+
+    public function setNavigationLabel(string $navigationLabel): FilamentMenuxPlugin
+    {
+        $this->navigationLabel = $navigationLabel;
+
+        return $this;
+
+    }
+
+    public function getNavigationLabel(): string
+    {
+        return $this->navigationLabel ?? 'Menus';
     }
 
     public function getResourceNavigationGroup(): ?string
