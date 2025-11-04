@@ -68,16 +68,18 @@ final class FilamentMenuxPlugin implements Plugin
 
     }
 
-    public function setNavigationIcon(string | null | \BackedEnum $navigationIcon): FilamentMenuxPlugin
+    public function setNavigationIcon(string | null | \BackedEnum | callable $navigationIcon): FilamentMenuxPlugin
     {
-        $this->navigationIcon = $navigationIcon;
+        $result = is_callable($navigationIcon) ? $navigationIcon() : $navigationIcon;
+        $this->navigationIcon = $result;
 
         return $this;
     }
 
-    public function setResourceNavigationGroup(?string $resourceNavigationGroup): FilamentMenuxPlugin
+    public function setResourceNavigationGroup(string | callable | null $resourceNavigationGroup): FilamentMenuxPlugin
     {
-        $this->resourceNavigationGroup = $resourceNavigationGroup;
+
+        $this->resourceNavigationGroup = is_callable($resourceNavigationGroup) ? $resourceNavigationGroup() : $resourceNavigationGroup;
 
         return $this;
 
