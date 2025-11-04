@@ -94,7 +94,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->size(Size::Small)
             ->icon(Heroicon::Trash)
             ->color('danger')
-            ->tooltip(__('menux.actions.delete'))
+            ->label(__('menux.actions.delete'))
             ->requiresConfirmation()
             ->tooltip('Delete')
             ->action(function ($arguments) {
@@ -102,8 +102,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 MenuItem::descendantsAndSelf($id)->each(function ($item) {
                     $item->delete();
                 });
-            })
-            ->iconButton();
+            });
     }
 
     public function deleteSelectedAction(): Action
@@ -137,8 +136,8 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
     {
         return ActionGroup::make([
             ($this->deleteAction())(['id' => $item->id]),
-            ($this->editAction())(['id' => $item->id]),
             ($this->duplicateAction())(['id' => $item->id]),
+            ($this->createSubMenuItemAction())(['id' => $item->id]),
         ]);
     }
 
@@ -169,7 +168,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         return Action::make('createSubMenuItemAction')
             ->size(Size::Small)
             ->icon(Heroicon::ChevronDoubleDown)
-            ->tooltip(__('menux.actions.add_sub_menu_item'))
+            ->label(__('menux.actions.add_sub_menu_item'))
             ->modalHeading(__('menux.actions.add_sub_menu_item'))
             ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
             ->modalWidth(Width::Medium)
@@ -178,8 +177,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 $parent = MenuItem::findOrFail($arguments['id']);
                 $item = MenuItem::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
                 $parent->appendNode($item);
-            })
-            ->iconButton();
+            });
     }
 
     public function duplicateAction(): Action
@@ -187,8 +185,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         return Action::make('duplicateAction')
             ->size(Size::Small)
             ->icon(Heroicon::ServerStack)
-            ->tooltip(__('menux.actions.duplicate'))
-            ->iconButton()
+            ->label(__('menux.actions.duplicate'))
             ->requiresConfirmation()
             ->modalHeading(__('menux.modals.duplicate.title'))
             ->action(function ($arguments) {

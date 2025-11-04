@@ -30,7 +30,7 @@ return [
         'load_previous' => 'Load Previous',
         'delete' => 'Delete',
         'delete_selected' => 'Delete :count Selected Items',
-        'add_sub_menu_item' => 'Add Sub Menu Item',
+        'add_sub_menu_item' => 'Create Sub Menu Item',
         'edit' => 'Edit',
         'save' => 'Save',
         'load_more' => 'Load More',

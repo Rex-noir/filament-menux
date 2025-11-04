@@ -27,9 +27,8 @@
                 value="{{$item->id}}"
                 wire:model="selectedItems"
             />
-            {{ $this->actionGroup($item) }}
             {{ ($this->editAction)(['title'=>$item->title, 'url'=>$item->url, 'target'=>$item->getRawOriginal('target'), 'id'=>$item->id])  }}
-            {{($this->createSubMenuItemAction)(['id' => $item->id])}}
+            {{ $this->actionGroup($item) }}
             {{--            <x-filament-actions::group class="hidden" :actions="[--}}
             {{--                ($this->viewAction)(['menuItemId' => $item->id]),--}}
             {{--                ($this->goToLinkAction)([])->url($item->is_link_resolved ? $item->link : '#'),--}}
