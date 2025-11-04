@@ -23,6 +23,7 @@ class MenuItem extends Model
     public function casts(): array
     {
         $enum = FilamentMenuxPlugin::get()->getLinkTargetEnum();
+
         return [
             'target' => $enum,
         ];
