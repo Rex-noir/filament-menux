@@ -55,7 +55,7 @@
                                 }
                             }
                         })
-                    },
+                    }
                 }">
                         @foreach($items as $item)
                             @include('filament-menux::components.menu-item',  ['item' => $item])
