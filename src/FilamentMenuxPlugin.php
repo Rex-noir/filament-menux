@@ -81,13 +81,13 @@ final class FilamentMenuxPlugin implements Plugin
 
     public function getActionModifier(MenuxActionType $actionType): ?ActionModifier
     {
-        return $this->actionModifiers->get($actionType);
+        return $this->actionModifiers->get($actionType->value);
 
     }
 
     public function hasActionModifier(MenuxActionType $actionType): bool
     {
-        return $this->actionModifiers->has($actionType);
+        return $this->actionModifiers->has($actionType->value);
 
     }
 
@@ -103,7 +103,7 @@ final class FilamentMenuxPlugin implements Plugin
             }
             $modifier = app($modifier);
         }
-        $this->actionModifiers->put($actionType, $modifier);
+        $this->actionModifiers->put($actionType->value, $modifier);
 
         return $this;
 
