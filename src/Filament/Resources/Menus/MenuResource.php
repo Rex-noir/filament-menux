@@ -38,11 +38,6 @@ class MenuResource extends Resource
         return FilamentMenuxPlugin::get()->getResourceNavigationGroup();
     }
 
-    public static function form(Schema $schema): Schema
-    {
-        return MenuForm::configure($schema);
-    }
-
     public static function table(Table $table): Table
     {
         return MenusTable::configure($table);
