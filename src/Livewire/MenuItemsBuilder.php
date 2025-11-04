@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace AceREx\FilamentMenux\Livewire;
 
 use AceREx\FilamentMenux\Contracts\Enums\MenuxEvents;
+use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm;
+use AceREx\FilamentMenux\FilamentMenuxPlugin;
 use AceREx\FilamentMenux\Models\MenuItem;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -32,6 +34,8 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
     protected $listeners = [
         MenuxEvents::CREATED->value => '$refresh',
     ];
+
+    protected string $menuItemForm = MenuItemForm::class;
 
     public function getAllSelectedProperty(): bool
     {
@@ -61,6 +65,8 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
     public function mount(int $menuId): void
     {
         $this->menuId = $menuId;
+        $plugin = FilamentMenuxPlugin::get();
+        $this->menuItemForm = $plugin->getMenuItemForm();
     }
 
     public function save(): void
@@ -159,7 +165,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->modalHeading(__('menux.labels.custom_menu_item_modal_heading'))
             ->modalWidth(width: Width::Small)
             ->modalSubmitActionLabel(__('menux.actions.save'))
-            ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
+            ->schema($this->menuItemForm::make())
             ->action(function ($data) {
                 MenuItem::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
                 Notification::make('menuItemCreated')
@@ -178,7 +184,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->icon(Heroicon::ChevronDoubleDown)
             ->label(__('menux.actions.add_sub_menu_item'))
             ->modalHeading(__('menux.actions.add_sub_menu_item'))
-            ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
+            ->schema($this->menuItemForm::make())
             ->modalWidth(Width::Medium)
             ->modalSubmitActionLabel(__('menux.actions.save'))
             ->action(function ($data, $arguments) {
@@ -220,7 +226,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->size(Size::Small)
             ->icon(Heroicon::PencilSquare)
             ->tooltip(__('menux.actions.edit'))
-            ->schema(\AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm::make())
+            ->schema($this->menuItemForm::make())
             ->modalWidth(Width::Medium)
             ->fillForm(function ($arguments) {
                 return $arguments;

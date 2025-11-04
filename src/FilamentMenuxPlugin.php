@@ -8,6 +8,7 @@ use AceREx\FilamentMenux\Contracts\Enums\MenuxLinkTarget;
 use AceREx\FilamentMenux\Contracts\Interfaces\HasStaticDefaultValue;
 use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\Filament\Resources\Menus\MenuResource;
+use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
 use Filament\Support\Contracts\HasLabel;
@@ -51,11 +52,32 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected ?string $navigationLabel = null;
 
+    protected string $menuItemForm = MenuItemForm::class;
+
     public function __construct()
     {
         // Lazy collection initialization ensures no shared static state.
         $this->staticMenuItems = collect();
         $this->menuxableModels = collect();
+    }
+
+    public function getMenuItemForm(): string
+    {
+        return $this->menuItemForm;
+    }
+
+    public function setMenuItemForm(string $menuItemForm): FilamentMenuxPlugin
+    {
+        if (! class_exists($menuItemForm)) {
+            throw new InvalidArgumentException("Form class {$menuItemForm} does not exist");
+        }
+        if (! is_subclass_of($menuItemForm, MenuItemForm::class)) {
+            throw new InvalidArgumentException("Form class {$menuItemForm} is not a valid form.");
+        }
+        $this->menuItemForm = $menuItemForm;
+
+        return $this;
+
     }
 
     public function setNavigationLabel(string $navigationLabel): FilamentMenuxPlugin
