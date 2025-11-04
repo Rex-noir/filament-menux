@@ -262,7 +262,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
 
         $itemsToAdd = collect($this->selectedItems)->mapWithKeys(function ($item, $index) use ($items, $enum) {
             $itemData = $items->get($item);
-            $itemData['target'] = $enum->tryFrom($itemData['target']) ?? $enum->getStaticDefaultValue();
+            $itemData['target'] = $enum::tryFrom($itemData['target']) ?? $enum::getStaticDefaultValue();
             $itemData['menu_id'] = $this->menuId;
             unset($itemData['id']);
             unset($itemData['type']);
