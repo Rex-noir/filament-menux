@@ -3,6 +3,14 @@
         <x-slot name="heading">
             {{__('menux.labels.menu_items_builder_heading')}}
         </x-slot>
+
+        <x-slot name="afterHeader">
+            <x-filament::input.checkbox
+                x-tooltip="'{{__('menux.actions.select_all')}}'"
+                wire.model="allSelected" wire:click="toggleSelectAll($event.target.checked)"
+            />
+        </x-slot>
+
         <form wire:submit="save" x-data="{
         data: $wire.entangle('data'),
         sortables: [],

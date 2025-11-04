@@ -10,9 +10,9 @@
                 <span class="font-medium">{{ str($item->title)->limit(30) }}</span>
                 <div>
                     <x-filament::link
-                            tag="button"
-                            weight="light"
-                            size="sm"
+                        tag="button"
+                        weight="light"
+                        size="sm"
                     >
                         <a target="_blank" href="{{$item->url}}">
                             {{ str($item->url)->limit(30) }}
@@ -22,6 +22,11 @@
             </div>
         </div>
         <div class="flex gap-2 items-center [&_svg]:shrink-0">
+            <x-filament::input.checkbox
+                x-tooltip="'{{__('menux.actions.select')}}'"
+                wire.model="selectedItems"
+                value="{{$item->id}}"
+            />
             {{ ($this->editAction)(['title'=>$item->title, 'url'=>$item->url, 'target'=>$item->target, 'id'=>$item->id])  }}
             {{($this->createSubMenuItemAction)(['id' => $item->id])}}
             {{($this->duplicateAction)(['id' => $item->id])}}
@@ -34,9 +39,9 @@
     </div>
 
     <div
-            @class(['nested ml-6' => true])
-            data-id="{{ $item->id }}"
-            x-data="{
+        @class(['nested ml-6' => true])
+        data-id="{{ $item->id }}"
+        x-data="{
             init(){
                 new Sortable(this.$el, {
                     handle: '.handle',

@@ -32,6 +32,8 @@ return [
         'edit' => 'Edit',
         'save' => 'Save',
         'load_more' => 'Load More',
+        'select_all' => 'Select All',
+        'select' => 'Select',
     ],
 
     'modals' => [

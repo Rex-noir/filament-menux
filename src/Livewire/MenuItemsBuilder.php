@@ -26,9 +26,28 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
 
     public array $data = [];
 
+    public array $selectedItems = [];
+
     protected $listeners = [
         MenuxEvents::CREATED->value => '$refresh',
     ];
+
+    public function getAllSelectedProperty(): bool
+    {
+        $allIds = $this->items()->toFlatTree()->pluck('id')
+            ->toArray();
+
+        return ! empty($allIds) && count($this->selectedItems) === count($allIds);
+
+    }
+
+    public function toggleSelectAll(bool $checked): void
+    {
+        $allIds = $this->items()->toFlatTree()->pluck('id')
+            ->toArray();
+
+        $this->selectedItems = $checked ? $allIds : [];
+    }
 
     public function mount(int $menuId): void
     {
