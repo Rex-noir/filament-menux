@@ -234,23 +234,37 @@ final class FilamentMenuxPlugin implements Plugin
 
     }
 
+    /**
+     * Get the navigation label of {@see MenuResource} unless modified via {@see FilamentMenuxPlugin::useCustomMenuResource()}
+     */
     public function getNavigationLabel(): ?string
     {
         return $this->navigationLabel ?? 'Menus';
     }
 
+    /**
+     * Get the navigation group which {@see MenuResource} belongs to unless modified via custom {@see FilamentMenuxPlugin::useCustomMenuResource()}
+     */
     public function getResourceNavigationGroup(): ?string
     {
         return $this->resourceNavigationGroup;
 
     }
 
+    /**
+     * Get the navigation icon of {@see MenuResource}
+     */
     public function getNavigationIcon(): null | string | \BackedEnum
     {
         return $this->navigationIcon;
 
     }
 
+    /**
+     * To set the navigation icon of the {@see MenuResource}.
+     *
+     * @return $this
+     */
     public function setNavigationIcon(string | null | \BackedEnum | callable $navigationIcon): FilamentMenuxPlugin
     {
         $result = is_callable($navigationIcon) ? $navigationIcon() : $navigationIcon;
@@ -259,6 +273,32 @@ final class FilamentMenuxPlugin implements Plugin
         return $this;
     }
 
+    /**
+     * To customize the menu resource, you can provide your own menu resource here. It must extend the base {@see MenuResource}
+     *
+     * @return $this
+     */
+    public function useCustomMenuResource(string $menuResource): FilamentMenuxPlugin
+    {
+        if (! class_exists($menuResource)) {
+            throw new InvalidArgumentException("Resource class {$menuResource} does not exist");
+        }
+
+        if (! is_subclass_of($menuResource, MenuResource::class)) {
+            throw new InvalidArgumentException("Resource class {$menuResource} is not a valid resource.");
+        }
+
+        $this->menuResource = $menuResource;
+
+        return $this;
+
+    }
+
+    /**
+     * Set the navigation group which the {@see MenuResource} belongs to.
+     *
+     * @return $this
+     */
     public function setResourceNavigationGroup(string | callable | null $resourceNavigationGroup): FilamentMenuxPlugin
     {
 
@@ -268,11 +308,22 @@ final class FilamentMenuxPlugin implements Plugin
 
     }
 
+    /**
+     * Get the enum used for target in {@see MenuItem} model.
+     * By default, it is set to {@see MenuxLinkTarget}}
+     */
     public function getLinkTargetEnum(): string
     {
         return $this->linkTargetEnum;
     }
 
+    /**
+     * Set the link target enum used by {@see MenuItemForm} by default.
+     * If you use custom {@see MenuItemForm} setting this is unnecessary since the form can have its own options for link target.
+     * By default it is set to {@see MenuxLinkTarget}}
+     *
+     * @return $this
+     */
     public function setLinkTargetEnum(string $linkTargetEnum): FilamentMenuxPlugin
     {
         if (! enum_exists($linkTargetEnum)) {
@@ -292,11 +343,20 @@ final class FilamentMenuxPlugin implements Plugin
         return $this;
     }
 
+    /**
+     * Get how much to show in each pagination of {@see Menuxable} models.
+     */
     public function getPerPage(): int
     {
         return $this->perPage;
     }
 
+    /**
+     * Set how much to show in each pagination of {@see Menuxable} models.
+     * By default, it is set to 4.
+     *
+     * @return $this
+     */
     public function setPerPage(int $menuxablePerPage): FilamentMenuxPlugin
     {
         $this->perPage = $menuxablePerPage;
@@ -304,6 +364,12 @@ final class FilamentMenuxPlugin implements Plugin
         return $this;
     }
 
+    /**
+     * Add or register the model for menu items.
+     * The model must be subclass of {@see Model} and must implement {@see Menuxable} interface
+     *
+     * @return $this
+     */
     public function addMenuxableModel(string $model): FilamentMenuxPlugin
     {
         if (! class_exists($model)) {
@@ -323,6 +389,9 @@ final class FilamentMenuxPlugin implements Plugin
         return $this;
     }
 
+    /**
+     * Get registered menuxable models.
+     */
     public function getMenuxableModels(): Collection
     {
         return $this->menuxableModels;
@@ -344,19 +413,23 @@ final class FilamentMenuxPlugin implements Plugin
      * @param  string  $label  The display name of the menu item.
      * @param  string  $url  The target URL for the menu item.
      */
-    public function addStaticMenuItem(string $label, string $url): static
+    public function addStaticMenuItem(string $label, string $url, \BackedEnum | string $target): FilamentMenuxPlugin
     {
-        $this->staticMenuItems->put((string) Str::uuid(), compact('label', 'url'));
+        $this->staticMenuItems->put((string) Str::uuid(), compact('label', 'url', 'target'));
 
         return $this;
     }
 
     /**
      * Define static menus for the plugin.
+     * When this is set and not empty, it will, by default, use a different create action showing only passed items as dialog.
+     * The purpose should be for the admin user to be able to create only specified menus.
      *
      * @param  array<string, string>|callable(): array<string, string>  $slugs
+     *                                                                          The array should map slugs to their corresponding labels,
+     *                                                                          for example, ['home' => 'Home', 'about-us' => 'About Us'].
      */
-    public function useStaticMenus(array | callable $slugs): static
+    public function useStaticMenus(array | callable $slugs): FilamentMenuxPlugin
     {
         $menus = is_callable($slugs) ? $slugs() : $slugs;
         $this->staticMenus = collect($menus);
