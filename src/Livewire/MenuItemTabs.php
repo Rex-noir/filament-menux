@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace AceREx\FilamentMenux\Livewire;
 
-use AceREx\FilamentMenux\Contracts\Enums\MenuxLinkTarget;
 use AceREx\FilamentMenux\Contracts\Enums\MenuxEvents;
+use AceREx\FilamentMenux\Contracts\Enums\MenuxLinkTarget;
+use AceREx\FilamentMenux\Contracts\Interfaces\HasStaticDefaultValue;
 use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\FilamentMenuxPlugin;
 use AceREx\FilamentMenux\Models\MenuItem;
+use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -249,14 +251,18 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     #[NoReturn]
     public function addMenuItems(): void
     {
+        $plugin = FilamentMenuxPlugin::get();
+        /** @var BackedEnum&HasStaticDefaultValue $enum */
+        $enum = $plugin->getLinkTargetEnum();
+
         $items = collect($this->staticItems);
         collect($this->menuxables)->each(function ($data, $modelClass) use (&$items) {
             $items = $items->merge(collect($data['items'])->mapWithKeys(fn ($item, $index) => [$item['id'] => $item]));
         });
 
-        $itemsToAdd = collect($this->selectedItems)->mapWithKeys(function ($item, $index) use ($items) {
+        $itemsToAdd = collect($this->selectedItems)->mapWithKeys(function ($item, $index) use ($items, $enum) {
             $itemData = $items->get($item);
-            $itemData['target'] = MenuxLinkTarget::tryFrom($itemData['target']) ?? MenuxLinkTarget::SELF;
+            $itemData['target'] = $enum->tryFrom($itemData['target']) ?? $enum->getStaticDefaultValue();
             $itemData['menu_id'] = $this->menuId;
             unset($itemData['id']);
             unset($itemData['type']);

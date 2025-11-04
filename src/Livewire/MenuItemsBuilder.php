@@ -7,6 +7,7 @@ namespace AceREx\FilamentMenux\Livewire;
 use AceREx\FilamentMenux\Contracts\Enums\MenuxEvents;
 use AceREx\FilamentMenux\Models\MenuItem;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
 use Filament\Notifications\Notification;
@@ -130,6 +131,15 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 $this->selectedItems = [];
             })
             ->iconButton();
+    }
+
+    public function actionGroup(MenuItem $item): ActionGroup
+    {
+        return ActionGroup::make([
+            ($this->deleteAction())(['id' => $item->id]),
+            ($this->editAction())(['id' => $item->id]),
+            ($this->duplicateAction())(['id' => $item->id]),
+        ]);
     }
 
     public function addCustomAction(): Action

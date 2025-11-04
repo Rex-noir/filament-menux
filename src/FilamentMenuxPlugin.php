@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AceREx\FilamentMenux;
 
 use AceREx\FilamentMenux\Contracts\Enums\MenuxLinkTarget;
+use AceREx\FilamentMenux\Contracts\Interfaces\HasStaticDefaultValue;
 use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\Filament\Resources\Menus\MenuResource;
 use Filament\Contracts\Plugin;
@@ -63,8 +64,13 @@ final class FilamentMenuxPlugin implements Plugin
             throw new InvalidArgumentException("Enum class {$linkTargetEnum} does not exist");
         }
 
-        if (! in_array(HasLabel::class, class_implements($linkTargetEnum), true)) {
-            throw new InvalidArgumentException("{$linkTargetEnum} must implement " . HasLabel::class . '.');
+        $implements = class_implements($linkTargetEnum);
+
+        if (
+            ! isset($implements[HasLabel::class]) ||
+            ! isset($implements[HasStaticDefaultValue::class])
+        ) {
+            throw new InvalidArgumentException("{$linkTargetEnum} must implement both HasLabel and HasStaticDefaultValue.");
         }
         $this->linkTargetEnum = $linkTargetEnum;
 
