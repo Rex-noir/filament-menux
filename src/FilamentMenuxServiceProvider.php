@@ -37,7 +37,7 @@ class FilamentMenuxServiceProvider extends PackageServiceProvider
                     ->publishConfigFile()
                     ->publishMigrations()
                     ->askToRunMigrations()
-                    ->askToStarRepoOnGitHub('acerex/filament-menux');
+                    ->askToStarRepoOnGitHub('Rex-noir/filament-menux');
             });
 
         $configFileName = $package->shortName();

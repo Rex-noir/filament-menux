@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Facade;
  */
 class FilamentMenux extends Facade
 {
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return \AceREx\FilamentMenux\FilamentMenux::class;
     }
