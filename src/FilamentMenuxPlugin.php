@@ -203,6 +203,8 @@ final class FilamentMenuxPlugin implements Plugin
             throw new InvalidArgumentException("Form class {$menuForm} is not a valid form.");
         }
         $this->menuForm = $menuForm;
+
+        return $this;
     }
 
     public function getMenuItemForm(): string
