@@ -47,6 +47,8 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected ?string $resourceNavigationGroup = null;
 
+    protected null | string | \BackedEnum $navigationIcon = null;
+
     public function __construct()
     {
         // Lazy collection initialization ensures no shared static state.
@@ -58,6 +60,19 @@ final class FilamentMenuxPlugin implements Plugin
     {
         return $this->resourceNavigationGroup;
 
+    }
+
+    public function getNavigationIcon(): null | string | \BackedEnum
+    {
+        return $this->navigationIcon;
+
+    }
+
+    public function setNavigationIcon(string | null | \BackedEnum $navigationIcon): FilamentMenuxPlugin
+    {
+        $this->navigationIcon = $navigationIcon;
+
+        return $this;
     }
 
     public function setResourceNavigationGroup(?string $resourceNavigationGroup): FilamentMenuxPlugin
