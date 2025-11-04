@@ -2,6 +2,8 @@
 
 namespace AceREx\FilamentMenux\Filament\Resources\Menus\Tables;
 
+use AceREx\FilamentMenux\Contracts\Enums\MenuxActionType;
+use AceREx\FilamentMenux\Contracts\Traits\HasActionModifier;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -11,6 +13,8 @@ use Filament\Tables\Table;
 
 class MenusTable
 {
+    use HasActionModifier;
+
     public static function configure(Table $table): Table
     {
         return $table
@@ -24,8 +28,8 @@ class MenusTable
                 //
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+                self::applyActionModifier(EditAction::make(), MenuxActionType::EDIT_MENU),
+                self::applyActionModifier(DeleteAction::make(), MenuxActionType::DELETE_MENU),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

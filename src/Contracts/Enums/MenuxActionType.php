@@ -12,4 +12,7 @@ enum MenuxActionType: string
     case EDIT_MENU_ITEM = 'edit-item';
     case ADD_CUSTOM_MENU_ITEM = 'add-custom-item';
     case CREATE_SUB_MENU_ITEM = 'create-sub-menu-item';
+    case CREATE_MENU = 'create-menu';
+    case DELETE_MENU = 'delete-menu';
+    case EDIT_MENU = 'edit-menu';
 }

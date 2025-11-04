@@ -119,7 +119,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 });
             });
 
-        return $this->applyActionModifier($action, MenuxActionType::DELETE_MENU_ITEM);
+        return self::applyActionModifier($action, MenuxActionType::DELETE_MENU_ITEM);
     }
 
     public function deleteSelectedAction(): Action
@@ -148,7 +148,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             })
             ->iconButton();
 
-        return $this->applyActionModifier($action, MenuxActionType::DELETE_SELECTED_MENU_ITEMS);
+        return self::applyActionModifier($action, MenuxActionType::DELETE_SELECTED_MENU_ITEMS);
     }
 
     public function atLeastOneItemIsSelected(): bool
@@ -185,7 +185,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             })
             ->iconButton();
 
-        return $this->applyActionModifier($action, MenuxActionType::ADD_CUSTOM_MENU_ITEM);
+        return self::applyActionModifier($action, MenuxActionType::ADD_CUSTOM_MENU_ITEM);
     }
 
     public function createSubMenuItemAction(): Action
@@ -204,7 +204,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 $parent->appendNode($item);
             });
 
-        return $this->applyActionModifier($action, MenuxActionType::CREATE_SUB_MENU_ITEM);
+        return self::applyActionModifier($action, MenuxActionType::CREATE_SUB_MENU_ITEM);
     }
 
     public function duplicateAction(): Action
@@ -231,7 +231,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                 $replica->insertAfterNode($item);
             });
 
-        return $this->applyActionModifier($action, MenuxActionType::DUPLICATE__MENU_ITEM);
+        return self::applyActionModifier($action, MenuxActionType::DUPLICATE__MENU_ITEM);
     }
 
     public function editAction(): Action
@@ -251,7 +251,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             })
             ->iconButton();
 
-        return $this->applyActionModifier($action, MenuxActionType::EDIT_MENU_ITEM);
+        return self::applyActionModifier($action, MenuxActionType::EDIT_MENU_ITEM);
     }
 
     public function render(): \Illuminate\Contracts\View\View | \Illuminate\Contracts\View\Factory | \Illuminate\View\View

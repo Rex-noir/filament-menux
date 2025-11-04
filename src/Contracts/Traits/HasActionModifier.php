@@ -8,7 +8,7 @@ use Filament\Actions\Action;
 
 trait HasActionModifier
 {
-    protected function applyActionModifier(Action $action, MenuxActionType $actionType): \Filament\Actions\Action
+    protected static function applyActionModifier(Action $action, MenuxActionType $actionType): \Filament\Actions\Action
     {
         $plugin = FilamentMenuxPlugin::get();
         if ($plugin->hasActionModifier($actionType)) {
