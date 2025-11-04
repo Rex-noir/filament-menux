@@ -36,6 +36,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
     ];
 
     protected string $menuItemForm = MenuItemForm::class;
+    protected string $itemModel = MenuItem::class;
 
     public function getAllSelectedProperty(): bool
     {
@@ -67,6 +68,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
         $this->menuId = $menuId;
         $plugin = FilamentMenuxPlugin::get();
         $this->menuItemForm = $plugin->getMenuItemForm();
+        $this->itemModel = $plugin->getMenuItemModel();
     }
 
     public function save(): void
@@ -75,7 +77,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             return;
         }
 
-        MenuItem::rebuildTree($this->data);
+        $this->itemModel::rebuildTree($this->data);
 
         Notification::make()
             ->title(__('menux.notifications.items_saved.title'))
@@ -85,7 +87,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
 
     public function items(): \LaravelIdea\Helper\AceREx\FilamentMenux\Models\_IH_MenuItem_C | \Illuminate\Database\Eloquent\Collection | array
     {
-        $query = MenuItem::query()
+        $query = $this->itemModel::query()
             ->with('children')
             ->where('menu_id', $this->menuId);
 
@@ -108,7 +110,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
                     return;
                 }
                 $id = $arguments['id'];
-                MenuItem::descendantsAndSelf($id)->each(function ($item) {
+                $this->itemModel::descendantsAndSelf($id)->each(function ($item) {
                     $item->delete();
                 });
             });
@@ -130,7 +132,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->modalHeading(__('menux.labels.menu_items_delete_selected_action_heading', ['count' => count($this->selectedItems)]))
             ->tooltip('Delete')
             ->action(function ($arguments) {
-                MenuItem::whereIn('id', $this->selectedItems)->delete();
+                $this->itemModel::whereIn('id', $this->selectedItems)->delete();
                 Notification::make('menuItemsDeleted')
                     ->title(__('menux.notifications.menu_items_deleted.title'))
                     ->body(__('menux.notifications.menu_items_deleted.body', ['count' => count($this->selectedItems)]))
@@ -167,7 +169,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->modalSubmitActionLabel(__('menux.actions.save'))
             ->schema($this->menuItemForm::make())
             ->action(function ($data) {
-                MenuItem::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
+                $this->itemModel::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
                 Notification::make('menuItemCreated')
                     ->success()
                     ->title(__('menux.notifications.menu_item_created.title'))
@@ -188,8 +190,8 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->modalWidth(Width::Medium)
             ->modalSubmitActionLabel(__('menux.actions.save'))
             ->action(function ($data, $arguments) {
-                $parent = MenuItem::findOrFail($arguments['id']);
-                $item = MenuItem::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
+                $parent = $this->itemModel::findOrFail($arguments['id']);
+                $item = $this->itemModel::query()->create(array_merge($data, ['menu_id' => $this->menuId]));
                 $parent->appendNode($item);
             });
     }
@@ -204,7 +206,7 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->modalHeading(__('menux.modals.duplicate.title'))
             ->action(function ($arguments) {
                 $id = $arguments['id'];
-                $item = MenuItem::findOrFail($id);
+                $item = $this->itemModel::findOrFail($id);
 
                 // Clone without tree structure columns
                 $replica = $item->replicate(['_lft', '_rgt', 'depth']);

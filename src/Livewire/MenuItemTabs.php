@@ -251,6 +251,8 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     #[NoReturn]
     public function addMenuItems(): void
     {
+        /** @var MenuItem $itemModel */
+        $itemModel = FilamentMenuxPlugin::get()->getMenuItemModel();
         $plugin = FilamentMenuxPlugin::get();
         /** @var BackedEnum&HasStaticDefaultValue $enum */
         $enum = $plugin->getLinkTargetEnum();
@@ -273,8 +275,8 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
         if (empty($itemsToAdd)) {
             return;
         }
-        collect($itemsToAdd->values())->each(function ($data) {
-            MenuItem::create($data);
+        collect($itemsToAdd->values())->each(function ($data) use ($itemModel) {
+            $itemModel::create($data);
         });
         $this->dispatch(MenuxEvents::CREATED->value, menuId: $this->menuId, ids: $itemsToAdd->keys()->toArray());
 
