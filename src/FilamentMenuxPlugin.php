@@ -4,23 +4,18 @@ declare(strict_types=1);
 
 namespace AceREx\FilamentMenux;
 
-use AceREx\FilamentMenux\Contracts\Interfaces\Menuxable;
 use AceREx\FilamentMenux\Filament\Resources\Menus\MenuResource;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use InvalidArgumentException;
-
-use function Livewire\of;
 
 final class FilamentMenuxPlugin implements Plugin
 {
     /**
      * Cached collection of static menus defined for the plugin.
      *
-     * @var Collection<string, string>|null
+     * @var \Illuminate\Support\Collection<string, string>|null
      */
     protected ?Collection $staticMenus = null;
 
@@ -32,15 +27,14 @@ final class FilamentMenuxPlugin implements Plugin
     protected string $menuResource = MenuResource::class;
 
     /**
-     * Holds statically defined menu items with labels and URLs.
-     *
-     * @var Collection<string, array{label: string, url: string}>
-     */
+    * Holds statically defined menu items with labels and URLs.
+    *
+    * @var \Illuminate\Support\Collection<string, array{label: string, url: string}>
+    */
     protected Collection $staticMenuItems;
 
     protected Collection $menuxableModels;
 
-    protected int $perPage = 4;
 
     public function __construct()
     {
@@ -49,46 +43,15 @@ final class FilamentMenuxPlugin implements Plugin
         $this->menuxableModels = collect();
     }
 
-    public function getPerPage(): int
+    public function addMenuxableModel()
     {
-        return $this->perPage;
-    }
 
-    public function setPerPage(int $menuxablePerPage): FilamentMenuxPlugin
-    {
-        $this->perPage = $menuxablePerPage;
-
-        return $this;
-    }
-
-    public function addMenuxableModel(string $model): FilamentMenuxPlugin
-    {
-        if (! class_exists($model)) {
-            throw new InvalidArgumentException("Model class {$model} does not exist");
-        }
-
-        if (! is_subclass_of($model, Model::class)) {
-            throw new InvalidArgumentException("Model class {$model} is not a valid model");
-        }
-
-        if (! in_array(Menuxable::class, class_implements($model))) {
-            throw new InvalidArgumentException("{$model} must implement " . Menuxable::class . '.');
-        }
-
-        $this->menuxableModels->push($model);
-
-        return $this;
-    }
-
-    public function getMenuxableModels(): Collection
-    {
-        return $this->menuxableModels;
     }
 
     /**
      * Retrieve all registered static menu items, ensuring unique URLs.
      *
-     * @return Collection<int, array{label: string, url: string}>
+     * @return \Illuminate\Support\Collection<int, array{label: string, url: string}>
      */
     public function getStaticMenuItems(): Collection
     {
@@ -103,8 +66,7 @@ final class FilamentMenuxPlugin implements Plugin
      */
     public function addStaticMenuItem(string $label, string $url): static
     {
-        $this->staticMenuItems->put((string) Str::uuid(), compact('label', 'url'));
-
+        $this->staticMenuItems->put((string)Str::uuid(), compact('label', 'url'));
         return $this;
     }
 
@@ -124,7 +86,7 @@ final class FilamentMenuxPlugin implements Plugin
     /**
      * Retrieve the currently defined static menus.
      *
-     * @return Collection<string, string>|null
+     * @return \Illuminate\Support\Collection<string, string>|null
      */
     public function getStaticMenus(): ?Collection
     {
@@ -158,18 +120,18 @@ final class FilamentMenuxPlugin implements Plugin
     /**
      * Create a new plugin instance through the service container.
      */
-    public static function make(): FilamentMenuxPlugin
+    public static function make(): static
     {
-        return app(FilamentMenuxPlugin::class);
+        return app(static::class);
     }
 
     /**
      * Retrieve the active plugin instance registered in Filament.
      */
-    public static function get(): FilamentMenuxPlugin
+    public static function get(): static
     {
         /** @var static $plugin */
-        $plugin = filament(app(FilamentMenuxPlugin::class)->getId());
+        $plugin = filament(app(static::class)->getId());
 
         return $plugin;
     }
