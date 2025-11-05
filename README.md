@@ -24,30 +24,10 @@ php artisan vendor:publish --tag="filament-menux-migrations"
 php artisan migrate
 ```
 
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag="filament-menux-config"
-```
-
 Optionally, you can publish the views using
 
 ```bash
 php artisan vendor:publish --tag="filament-menux-views"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-## Usage
-
-```php
-$filamentMenux = new AceREx\FilamentMenux();
-echo $filamentMenux->echoPhrase('Hello, AceREx!');
 ```
 
 ## Testing
