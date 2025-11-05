@@ -15,6 +15,7 @@ Inspired by existing menu builders, but simplified and easier to customize.
 - [Registering to panel](#registering-to-panel)
 - [Static Menus](#static-menus)
 - [Static Menu Items](#static-menu-items)
+- [Using Custom Link Target Enum](#using-custom-link-target-enum)
 
 
 ## Installation
@@ -102,11 +103,51 @@ You can add static menu items like this.
 The third argument is optional and can also be any type of backed enum. For consistency, you should
 use the enum you use for the item form. See [Using custom link target enum](#using-custom-link-target-enum)
 
+## Using Custom Link Target Enum
 
-## Security Vulnerabilities
+By default the plugin uses ```MenuxLinkTarget``` for model cast and inside menu item form.
+But sometimes, you would like to show fewer options or modify the labeling. Or add some more functionality.
+To do that, you can pass your own enum and that enum will be used inside the menu item form and the model cast.
 
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+```php
+->setLinkTargetEnum(linkTargetEnum: LinkTarget::class)
+```
+The custom enum must implement two interfaces; 
 
+```php
+\Filament\Actions\Concerns\HasLabel
+```
+
+```php
+\AceREx\FilamentMenux\Contracts\Interfaces\HasStaticDefaultValue
+```
+
+For example
+
+```php
+enum LinkTarget: string implements HasLabel, HasStaticDefaultValue
+{
+    case SELF = 'self';
+
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::SELF => 'SELF'
+        };
+    }
+
+    public static function getStaticDefaultValue(): HasStaticDefaultValue
+    {
+        return self::SELF;
+    }
+
+    public function getSomething(): string
+    {
+        return 'something';
+    }
+}
+
+```
 
 ## License
 
