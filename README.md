@@ -103,7 +103,7 @@ use the enum you use for the item form. See [Using custom link target enum](#usi
 ## Add Model-Based Menu Items
 
 Inspired by [Menu Builder](https://filamentphp.com/plugins/datlechin-menu-builder) by
-Ngô Quốc Đạt, this plugin supports registering models and render them into menu item list selection.
+Ngô Quốc Đạt, this plugin supports registering models and rendering them into menu item list selection.
 
 ```php
 ->addMenuxableModel(Post::class)
