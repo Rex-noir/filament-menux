@@ -235,7 +235,7 @@ final class FilamentMenuxPlugin implements Plugin
     }
 
     /**
-     * Get the navigation label of {@see MenuResource} unless modified via {@see FilamentMenuxPlugin::useCustomMenuResource()}
+     * Get the navigation label of {@see MenuResource} unless modified via {@see FilamentMenuxPlugin->useCustomMenuResource()}
      */
     public function getNavigationLabel(): ?string
     {
@@ -243,7 +243,7 @@ final class FilamentMenuxPlugin implements Plugin
     }
 
     /**
-     * Get the navigation group which {@see MenuResource} belongs to unless modified via custom {@see FilamentMenuxPlugin::useCustomMenuResource()}
+     * Get the navigation group which {@see MenuResource} belongs to unless modified via custom {@see FilamentMenuxPlugin->useCustomMenuResource()}
      */
     public function getResourceNavigationGroup(): ?string
     {
