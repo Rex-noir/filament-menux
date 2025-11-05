@@ -30,6 +30,29 @@ Optionally, you can publish the views using
 php artisan vendor:publish --tag="filament-menux-views"
 ```
 
+## Usage
+
+To start using, add the plugin to the panel you want.
+```php
+FilamentMenuxPlugin::make()
+    ->useStaticMenus([
+        'header' => 'Header',
+        'footer' => 'Footer',
+        ])
+    ->addStaticMenuItem('Home', '/')
+    ->setNavigationLabel('WATASHI')
+    ->setPerPage(4)
+    ->setActionModifierUsing(MenuxActionType::EDIT_MENU_ITEM, function (Action $action) {
+        return $action->icon(Heroicon::MagnifyingGlassCircle);
+    })
+    ->addMenuxableModel(Post::class)
+    ->setResourceNavigationGroup('WATASHI')
+    ->addStaticMenuItem('Contact Us', '/contact-us')
+    ->setLinkTargetEnum(linkTargetEnum: LinkTarget::class)
+    ->addMenuxableModel(model: Page::class),
+
+```
+
 ## Testing
 
 ```bash
