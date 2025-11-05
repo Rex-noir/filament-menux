@@ -73,7 +73,7 @@
             "type": "github",
             "url": "https://github.com/Rex-noir"
         }
-    ]
+    ],
     "extra": {
         "laravel": {
             "providers": [
