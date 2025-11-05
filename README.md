@@ -6,7 +6,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/acerex/filament-menux.svg?style=flat-square)](https://packagist.org/packages/acerex/filament-menux)
 
 Inspired by existing menu builders, but simplified and easier to customize. Most of the customizations might
-look trivial, but not being able to customize these little things can sometimes become a pain-in-ass (At least in my experience).
+look trivial, but having to roll your own custom resource and extending the plugin's classes to customize these little things can sometimes become a pain-in-ass (At least in my experience).
 
 ## Table of Contents
 
