@@ -6,8 +6,16 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/acerex/filament-menux.svg?style=flat-square)](https://packagist.org/packages/acerex/filament-menux)
 
 
+Inspired by existing menu builders, but simplified and easier to customize.
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Registering to panel](#registering-to-panel)
+- [Static Menus](#static-menus)
+- [Static Menu Items](#static-menu-items)
+
 
 ## Installation
 
@@ -53,28 +61,52 @@ FilamentMenuxPlugin::make()
 
 ```
 
-## Testing
 
-```bash
-composer test
+
+## Registering to panel
+
+Just like any other panel plugins, you can register this in your panel provider
+
+```php
+->plugins([
+    \AceREx\FilamentMenux\FilamentMenuxPlugin::make()
+])
 ```
 
-## Changelog
+## Static Menus
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+With static menus you can limit how many menus can be created except the menus you provided.
+This is useful, especially for projects where the frontend fetches the menus statically via slug.
+To pass static menus you pass the menus to the **useStaticMenus** method.
 
-## Contributing
+```php
+\AceREx\FilamentMenux\FilamentMenuxPlugin::make()
+    ->useStaticMenus([
+        'slug'=>'label',
+        'header'=>"Header"
+    ])
+```
 
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
+![Static Menu Items Create](docs/images/static-menus-create-dialog.png)
+
+## Static Menu Items
+
+Static menu items are shown menu items that you provide from the panel configuration.
+You can add static menu items like this.
+
+```php
+->addStaticMenuItem('Home', '/', '_self')
+
+```
+
+The third argument is optional and can also be any type of backed enum. For consistency, you should
+use the enum you use for the item form. See [Using custom link target enum](#using-custom-link-target-enum)
+
 
 ## Security Vulnerabilities
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
 
-## Credits
-
-- [AceREx](https://github.com/AceREx)
-- [All Contributors](../../contributors)
 
 ## License
 
