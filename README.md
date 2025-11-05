@@ -14,6 +14,7 @@ Inspired by existing menu builders, but simplified and easier to customize.
 - [Static Menus](#static-menus)
 - [Static Menu Items](#static-menu-items)
 - [Add Model-Based Menu Items](#add-model-based-menu-items)
+- [Set Records Per Page For Menu-Based Menu Items](#set-records-per-page-for-menu-based-menu-items)
 - [Using Custom Link Target Enum](#using-custom-link-target-enum)
 
 ## Installation
@@ -159,6 +160,14 @@ class Post extends Model implements Menuxable
 ```
 
 ![Menuxable Model](docs/images/menuxable-menus-ui-list.png)
+
+## Set Records Per Page For Menu-Based Menu Items
+
+By default, all menuxable menus are paginated with 4 records per page. However, you can customize this
+by providing the number of records you want to query per page via:
+```php
+->setPerPage(4)
+```
 
 ## Using Custom Link Target Enum
 
