@@ -5,9 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/acerex/filament-menux/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/acerex/filament-menux/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/acerex/filament-menux.svg?style=flat-square)](https://packagist.org/packages/acerex/filament-menux)
 
-
 Inspired by existing menu builders, but simplified and easier to customize.
-
 
 ## Table of Contents
 
@@ -15,8 +13,8 @@ Inspired by existing menu builders, but simplified and easier to customize.
 - [Registering to panel](#registering-to-panel)
 - [Static Menus](#static-menus)
 - [Static Menu Items](#static-menu-items)
+- [Add Model-Based Menu Items](#add-model-based-menu-items)
 - [Using Custom Link Target Enum](#using-custom-link-target-enum)
-
 
 ## Installation
 
@@ -42,6 +40,7 @@ php artisan vendor:publish --tag="filament-menux-views"
 ## Usage
 
 To start using, add the plugin to the panel you want.
+
 ```php
 FilamentMenuxPlugin::make()
     ->useStaticMenus([
@@ -61,8 +60,6 @@ FilamentMenuxPlugin::make()
     ->addMenuxableModel(model: Page::class),
 
 ```
-
-
 
 ## Registering to panel
 
@@ -103,6 +100,66 @@ You can add static menu items like this.
 The third argument is optional and can also be any type of backed enum. For consistency, you should
 use the enum you use for the item form. See [Using custom link target enum](#using-custom-link-target-enum)
 
+## Add Model-Based Menu Items
+
+Inspired by [Menu Builder](#https://filamentphp.com/plugins/datlechin-menu-builder) by
+Ngô Quốc Đạt, this plugin supports registering models and render them into menu item list selection.
+
+```php
+->addMenuxableModel(Post::class)
+```
+
+The model must implement interfaces;
+```php
+\AceREx\FilamentMenux\Contracts\Interfaces\Menuxable
+```
+
+For example;
+```php
+class Post extends Model implements Menuxable
+{
+    /** @use HasFactory<\Database\Factories\PostFactory> */
+    use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'slug',
+    ];
+
+    public static function getMenuxLabel(): string
+    {
+        return 'Posts';
+    }
+
+    public function getMenuxTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getMenuxUrl(): string
+    {
+        return "https://www.google.com/{$this->slug}";
+    }
+
+    public function getMenuxTarget(): BackedEnum
+    {
+        return MenuxLinkTarget::SELF;
+    }
+
+    public static function getMenuxablesUsing(?string $q, Builder $builder): Builder
+    {
+        if (filled($q)) {
+            return $builder->whereLike('title', $q);
+        }
+
+        return $builder;
+    }
+}
+
+```
+
+![Menuxable Model](docs/images/menuxable-menus-ui-list.png)
+
 ## Using Custom Link Target Enum
 
 By default the plugin uses ```MenuxLinkTarget``` for model cast and inside menu item form.
@@ -112,7 +169,8 @@ To do that, you can pass your own enum and that enum will be used inside the men
 ```php
 ->setLinkTargetEnum(linkTargetEnum: LinkTarget::class)
 ```
-The custom enum must implement two interfaces; 
+
+The custom enum must implement two interfaces;
 
 ```php
 \Filament\Actions\Concerns\HasLabel
