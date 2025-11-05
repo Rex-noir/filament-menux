@@ -442,7 +442,7 @@ final class FilamentMenuxPlugin implements Plugin
      * @param  string  $label  The display name of the menu item.
      * @param  string  $url  The target URL for the menu item.
      */
-    public function addStaticMenuItem(string $label, string $url, \BackedEnum | string $target): FilamentMenuxPlugin
+    public function addStaticMenuItem(string $label, string $url, \BackedEnum | string $target = MenuxLinkTarget::BLANK): FilamentMenuxPlugin
     {
         $this->staticMenuItems->put((string) Str::uuid(), compact('label', 'url', 'target'));
 
