@@ -5,7 +5,8 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/acerex/filament-menux/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/acerex/filament-menux/actions?query=workflow%3A"Fix+PHP+code+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/acerex/filament-menux.svg?style=flat-square)](https://packagist.org/packages/acerex/filament-menux)
 
-Inspired by existing menu builders, but simplified and easier to customize.
+Inspired by existing menu builders, but simplified and easier to customize. Most of the customizations might
+look trivial but not being able to customize these little things can become a pain-in-ass sometimes (At lease in my experience).
 
 ## Table of Contents
 
