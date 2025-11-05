@@ -169,12 +169,21 @@ final class FilamentMenuxPlugin implements Plugin
         return $this;
     }
 
+    /**
+     * Getter for the {@see MenusTable} used throughout the plugin
+     */
     public function getMenusTable(): string
     {
         return $this->menusTable;
 
     }
 
+    /**
+     * Customize the menus table which shows list of menus. By default, it contains one column, two actions and one bulk action.
+     * The custom class must extend {@see MenusTable} or {@see \http\Exception\InvalidArgumentException} will be thrown
+     *
+     * @return $this
+     */
     public function setMenusTable(string $menusTable): FilamentMenuxPlugin
     {
         if (! class_exists($menusTable)) {
@@ -188,12 +197,21 @@ final class FilamentMenuxPlugin implements Plugin
         return $this;
     }
 
+    /**
+     * Getter for the {@see MenuForm} used through the plugin.
+     */
     public function getMenuForm(): string
     {
         return $this->menuForm;
 
     }
 
+    /**
+     * Setter for the menu form. By default, the form includes a single text input {@see MenuForm}.
+     * If you want to customize it, the custom class must extend {@see MenuForm}}
+     *
+     * @return $this
+     */
     public function setMenuForm(string $menuForm): FilamentMenuxPlugin
     {
         if (! class_exists($menuForm)) {
@@ -207,11 +225,19 @@ final class FilamentMenuxPlugin implements Plugin
         return $this;
     }
 
+    /**
+     * Getter for {@see MenuItemForm}
+     */
     public function getMenuItemForm(): string
     {
         return $this->menuItemForm;
     }
 
+    /**
+     * Set your custom form for menu items. The menu form must extend {@see MenuItemForm} or {@see InvalidArgumentException} will be thrown
+     *
+     * @return $this
+     */
     public function setMenuItemForm(string $menuItemForm): FilamentMenuxPlugin
     {
         if (! class_exists($menuItemForm)) {
@@ -226,6 +252,9 @@ final class FilamentMenuxPlugin implements Plugin
 
     }
 
+    /**
+     * Set the navigation label for {@see MenuResource}
+     */
     public function setNavigationLabel(string $navigationLabel): FilamentMenuxPlugin
     {
         $this->navigationLabel = $navigationLabel;
