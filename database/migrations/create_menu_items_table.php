@@ -11,7 +11,6 @@ return new class extends Illuminate\Database\Migrations\Migration
             $table->string('url');
             $table->integer('order')->default(0);
             $table->string('target');
-            $table->timestamps();
             $table->nestedSet();
         });
     }
