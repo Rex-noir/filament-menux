@@ -27,6 +27,7 @@ use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 use JetBrains\PhpStorm\NoReturn;
 use Livewire\Attributes\Url;
@@ -208,13 +209,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
             foreach ($groupedMenuItems as $group => $items) {
                 $tabs->push(
                     Tab::make($group)
-                        ->label(function () use ($plugin) {
-                            if ($plugin->getStaticTabTitle() !== null) {
-                                return $plugin->getStaticTabTitle();
-                            }
-
-                            return __('menux.tabs.static');
-                        })
+                        ->label($group)
                         ->schema(function () use ($group) {
                             $filteredItems = $this->getFilteredGroupMenuItems($group);
 
@@ -226,7 +221,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
                             }
 
                             return [
-                                CheckboxList::make('groupedItems')
+                                CheckboxList::make('')
                                     ->hiddenLabel()
                                     ->statePath('selectedItems')
                                     ->live()
@@ -323,6 +318,9 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
         collect($this->menuxables)->each(function ($data, $modelClass) use (&$items) {
             $items = $items->merge(collect($data['items'])->mapWithKeys(fn ($item, $index) => [$item['id'] => $item]));
         });
+        collect($this->groupedMenuItems)->each(function ($data, $group) use (&$items) {
+            $items = $items->merge(collect($data)->mapWithKeys(fn ($item, $index) => [$item['id'] => $item]));
+        });
 
         $itemsToAdd = collect($this->selectedItems)->mapWithKeys(function ($item, $index) use ($items, $enum) {
             $itemData = $items->get($item);
@@ -389,6 +387,18 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     private function loadGroupedMenuItems(): void
     {
         $plugin = FilamentMenuxPlugin::get();
-        $this->groupedMenuItems = $plugin->getGroupedMenuItems()->toArray();
+        $this->groupedMenuItems = $plugin->getGroupedMenuItems()->mapWithKeys(function ($items, $group) {
+            return [
+                $group => collect($items)->map(function ($item) {
+                    return [
+                        'id' => Str::uuid()->toString(),
+                        'title' => $item['title'],
+                        'url' => $item['url'] ?? '#',
+                        'target' => $item['target']?->value ?? MenuxLinkTarget::SELF->value,
+                        'type' => 'static',
+                    ];
+                }),
+            ];
+        })->toArray();
     }
 }
