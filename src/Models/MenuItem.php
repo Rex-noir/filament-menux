@@ -20,6 +20,8 @@ class MenuItem extends Model
         'target',
     ];
 
+    protected $timestamps = false;
+
     public function casts(): array
     {
         $enum = FilamentMenuxPlugin::get()->getLinkTargetEnum();
