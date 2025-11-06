@@ -20,7 +20,7 @@ class MenuItem extends Model
         'target',
     ];
 
-    protected $timestamps = false;
+    public $timestamps = false;
 
     public function casts(): array
     {
