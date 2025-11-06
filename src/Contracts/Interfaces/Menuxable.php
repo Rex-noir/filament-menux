@@ -20,5 +20,5 @@ interface Menuxable
 
     public function getMenuxTarget(): \BackedEnum;
 
-    public static function getMenuxablesUsing(?string $q, Builder $builder): Builder | LengthAwarePaginator;
+    public static function getMenuxablesUsing(int $page, int $perPage, ?string $q, Builder $builder): Builder | LengthAwarePaginator;
 }

@@ -109,7 +109,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
         $perPage = $plugin->getMenuxablesPerPage();
 
         /** @var Menuxable $modelClass */
-        $result = $modelClass::getMenuxablesUsing($this->searchQuery, $modelClass::query(), $page);
+        $result = $modelClass::getMenuxablesUsing($page, $perPage, $this->searchQuery, $modelClass::query());
 
         // Handle both paginated and builder results
         if ($result instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator) {
