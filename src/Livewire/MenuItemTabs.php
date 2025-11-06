@@ -48,12 +48,14 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     public ?string $activeTab = null;
 
     public array $selectedItems = [];
+    public array $groupedMenuItems = [];
 
     public function mount(string $menuId): void
     {
         $this->menuId = $menuId;
         $this->loadStaticItems();
         $this->loadMenuxables();
+        $this->loadGroupedMenuItems();
     }
 
     private function loadStaticItems(): void

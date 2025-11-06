@@ -81,7 +81,7 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected Collection $actionModifiers;
 
-    protected Collection $staticGroups;
+    protected Collection $groupedMenuItems;
 
     public function __construct()
     {
@@ -90,15 +90,15 @@ final class FilamentMenuxPlugin implements Plugin
         $this->menuxableModels = collect();
         $this->actionModifiers = collect();
         $this->staticMenus = collect();
-        $this->staticGroups = collect();
+        $this->groupedMenuItems = collect();
     }
 
     public function addStaticGroup(string $name, array | callable $items): FilamentMenuxPlugin
     {
         if (is_callable($items)) {
-            $this->deferConfiguration("staticGroup_{$name}", $items);
+            $this->deferConfiguration("groupedMenuItems{$name}", $items);
         } else {
-            $this->staticGroups->put($name, $items);
+            $this->groupedMenuItems->put($name, $items);
         }
 
         return $this;
@@ -134,9 +134,9 @@ final class FilamentMenuxPlugin implements Plugin
                 $value = $config->resolve();
 
                 switch ($key) {
-                    case str_starts_with($key, 'staticGroup_'):
-                        $groupName = substr($key, strlen('staticGroup_'));
-                        $this->staticGroups->put($groupName, $value);
+                    case str_starts_with($key, 'groupedMenuItems'):
+                        $groupName = substr($key, strlen('groupedMenuItems'));
+                        $this->groupedMenuItems->put($groupName, $value);
 
                         break;
 
