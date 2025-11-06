@@ -97,8 +97,7 @@ You can add static menu items like this.
 
 ```php
 ->addStaticMenuItem('Home', '/', '_self')
-
-```
+ ```
 
 The third argument is optional and can also be any type of backed enum. For consistency, you should
 use the enum you use for the item form. See [Using custom link target enum](#using-custom-link-target-enum)
