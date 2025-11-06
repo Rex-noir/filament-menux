@@ -306,7 +306,86 @@ or
 ## Action Modifiers
 
 You can modify actions defined in the ```AceREx\FilamentMenux\Contracts\Enums\MenuxActionType```.
+List of actions modifiable via the panel,
 
+```php
+enum MenuxActionType: string
+{
+    /**
+     * Used in menu items builder inside the action group.
+     */
+    case DELETE_MENU_ITEM = 'delete-item';
+
+    /**
+     *Used in the menu items builder to delete the selected items.
+     */
+    case DELETE_SELECTED_MENU_ITEMS = 'delete-selected-items';
+
+    /**
+     * Used in menu items builder inside the action group.
+     */
+    case DUPLICATE__MENU_ITEM = 'duplicate-item';
+    /**
+     * Used in the menu items builder to edit created menu item.
+     */
+    case EDIT_MENU_ITEM = 'edit-item';
+
+    /**
+     * Used for adding a menu item not defined in the menu tabs.
+     */
+    case ADD_CUSTOM_MENU_ITEM = 'add-custom-item';
+
+    /**
+     * Used for adding a sub menu-item right under the item.
+     */
+    case CREATE_SUB_MENU_ITEM = 'create-sub-menu-item';
+    /**
+     * Used for creating the menu from the {@see ListMenus} or the resource header.
+     */
+    case CREATE_MENU = 'create-menu';
+    /**
+     * Used inside {@see MenusTable} actions. If you use your own Menus Table,
+     * then it might be more practical to modify it inside that custom table.
+     */
+    case DELETE_MENU = 'delete-menu';
+    /**
+     * Used inside {@see MenusTable} actions. If you use your own Menus Table,
+     * then it might be more practical to modify it inside that custom table.
+     */
+    case EDIT_MENU = 'edit-menu';
+}
+```
+
+To modify each action, you pass the action type and return the Action instance.
+For example, with closure:
+
+```php
+->setActionModifierUsing(MenuxActionType::DUPLICATE__MENU_ITEM, function (Action $action) {
+    return $action
+        ->icon(Heroicon::MagnifyingGlassCircle);
+```
+
+Here the closure receives the Filament Action instance, and the plugin merges it with the default configurations.
+
+Also, you can pass class-based **Action Modifiers**. For example,
+```php
+use AceREx\FilamentMenux\Contracts\Interfaces\ActionModifier;
+use Filament\Actions\Action;
+
+class CustomCreateSubMenuItemAction implements ActionModifier
+{
+    public function modify(Action $action): Action
+    {
+        return $action->label('Custom Gigidy');
+    }
+}
+```
+and in the panel register the modifier
+```php
+->setActionModifier(MenuxActionType::CREATE_SUB_MENU_ITEM, CustomCreateSubMenuItemAction::class)
+```
+
+![Custom Action Modifier for Sub Menu Item creation](docs/images/action-modifier.png)
 
 ## Using Custom Link Target Enum
 
