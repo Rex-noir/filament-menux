@@ -29,7 +29,7 @@ final class FilamentMenuxPlugin implements Plugin
 {
     protected array $deferredConfigurations = [];
 
-    protected ?string $staticTabTitle;
+    protected ?string $staticTabTitle = null;
 
     /**
      * Cached collection of static menus defined for the plugin.
@@ -102,6 +102,11 @@ final class FilamentMenuxPlugin implements Plugin
         }
 
         return $this;
+    }
+
+    public function getGroupedMenuItems(): Collection
+    {
+        return $this->groupedMenuItems;
     }
 
     public function setStaticTabTitle(string | callable $title): FilamentMenuxPlugin

@@ -48,6 +48,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     public ?string $activeTab = null;
 
     public array $selectedItems = [];
+
     public array $groupedMenuItems = [];
 
     public function mount(string $menuId): void
@@ -152,12 +153,25 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
             ->toArray();
     }
 
+    private function getFilteredGroupMenuItems(string $group): array
+    {
+        if (! empty($this->searchQuery)) {
+            $initialItems = $this->groupedMenuItems[$group] ?? [];
+
+            return collect($initialItems)->filter(fn ($item) => str_contains(strtolower($item['title']), strtolower($this->searchQuery)))->toArray();
+
+        }
+
+        return $this->groupedMenuItems[$group] ?? [];
+    }
+
     private function getTabs(): array
     {
         $tabs = collect();
         $plugin = FilamentMenuxPlugin::get();
         $staticMenuItems = $plugin->getStaticMenuItems();
         $menuxableModels = $plugin->getMenuxableModels();
+        $groupedMenuItems = $plugin->getGroupedMenuItems();
 
         if ($staticMenuItems->isNotEmpty()) {
             $tabs->push(
@@ -189,6 +203,39 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
                         ];
                     })
             );
+        }
+        if ($groupedMenuItems->isNotEmpty()) {
+            foreach ($groupedMenuItems as $group => $items) {
+                $tabs->push(
+                    Tab::make($group)
+                        ->label(function () use ($plugin) {
+                            if ($plugin->getStaticTabTitle() !== null) {
+                                return $plugin->getStaticTabTitle();
+                            }
+
+                            return __('menux.tabs.static');
+                        })
+                        ->schema(function () use ($group) {
+                            $filteredItems = $this->getFilteredGroupMenuItems($group);
+
+                            if (empty($filteredItems)) {
+                                return [
+                                    EmptyState::make(__('menux.tabs.no_items_found'))
+                                        ->icon(icon: Heroicon::ExclamationCircle),
+                                ];
+                            }
+
+                            return [
+                                CheckboxList::make('groupedItems')
+                                    ->hiddenLabel()
+                                    ->statePath('selectedItems')
+                                    ->live()
+                                    ->options(collect($filteredItems)->mapWithKeys(fn ($item) => [$item['id'] => $item['title']]))
+                                    ->descriptions(collect($filteredItems)->mapWithKeys(fn ($item) => [$item['id'] => $item['url']])),
+                            ];
+                        })
+                );
+            }
         }
 
         if ($menuxableModels->isNotEmpty()) {
@@ -262,7 +309,8 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
         return $tabs->toArray();
     }
 
-    #[NoReturn]
+    #[
+        NoReturn]
     public function addMenuItems(): void
     {
         /** @var MenuItem $itemModel */
@@ -336,5 +384,11 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     public function render(): View
     {
         return view('filament-menux::livewire.menu-item-tabs');
+    }
+
+    private function loadGroupedMenuItems(): void
+    {
+        $plugin = FilamentMenuxPlugin::get();
+        $this->groupedMenuItems = $plugin->getGroupedMenuItems()->toArray();
     }
 }
