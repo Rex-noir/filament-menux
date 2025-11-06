@@ -305,7 +305,7 @@ or
 #### Custom Menu Item Form
 
 You can also use your own custom menu item form.
-Just pass your menu item form class that extends the plugin base class.
+Pass your menu item for the class that extends the plugin base class.
 
 ```php
 ->setMenuItemForm(YourCustomMenuItemForm::class)
@@ -324,6 +324,8 @@ You can also pass callable that returns anonymouse class too.
     }
 })
 ```
+
+To modify the creation of menu items, see the [Action Modifiers](#action-modifiers) section.
 
 ## Action Modifiers
 
