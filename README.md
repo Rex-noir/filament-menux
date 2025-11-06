@@ -18,6 +18,7 @@ things can sometimes become a pain-in-ass (At least in my experience).
 - [Add Model-Based Menu Items](#add-model-based-menu-items)
 - [Modifying the Base Resource Class](#modifying-the-base-resource-class)
 - [Custom Forms And Tables](#custom-forms-and-table)
+- [Action Modifiers](#action-modifiers)
 - [Using Custom Link Target Enum](#using-custom-link-target-enum)
 
 ## Installation
@@ -301,6 +302,11 @@ or
 
 });
 ```
+
+## Action Modifiers
+
+You can modify actions defined in the ```AceREx\FilamentMenux\Contracts\Enums\MenuxActionType```.
+
 
 ## Using Custom Link Target Enum
 
