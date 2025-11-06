@@ -26,6 +26,8 @@ use InvalidArgumentException;
 
 final class FilamentMenuxPlugin implements Plugin
 {
+    protected array $deferredConfigurations = [];
+
     /**
      * Cached collection of static menus defined for the plugin.
      *
@@ -85,6 +87,50 @@ final class FilamentMenuxPlugin implements Plugin
         $this->menuxableModels = collect();
         $this->actionModifiers = collect();
         $this->staticMenus = collect();
+    }
+
+    protected function deferConfiguration(string $key, $value): void
+    {
+        $this->deferredConfigurations[$key] = $value;
+    }
+
+    protected function resolveDeferredConfigurations(): void
+    {
+
+        foreach ($this->deferredConfigurations as $key => $config) {
+            if ($config->isDeferred()) {
+                $value = $config->resolve();
+
+                switch ($key) {
+                    case 'navigationIcon':
+                        $this->setNavigationIcon($value);
+
+                        break;
+
+                    case 'navigationGroup':
+                        $this->setNavigationGroup($value);
+
+                        break;
+                    case 'navigationLabel':
+                        $this->setNavigationLabel($value);
+
+                        break;
+                    case 'menuForm':
+                        $this->setMenuForm($value);
+
+                        break;
+                    case 'menuItemForm':
+                        $this->setMenuItemForm($value);
+
+                        break;
+                    case 'menusTable':
+                        $this->setMenusTable($value);
+
+                        break;
+
+                }
+            }
+        }
     }
 
     public function getShouldCreateStaticMenusOnBoot(): bool
@@ -201,11 +247,9 @@ final class FilamentMenuxPlugin implements Plugin
     public function setMenusTable(string | callable $menusTable): FilamentMenuxPlugin
     {
         if (is_callable($menusTable)) {
-            $menusTable = $menusTable();
+            $this->deferConfiguration('menusTable', $menusTable);
 
-            if (is_object($menusTable)) {
-                $menusTable = get_class($menusTable);
-            }
+            return $this;
         }
 
         if (! is_subclass_of($menusTable, MenusTable::class)) {
@@ -235,11 +279,9 @@ final class FilamentMenuxPlugin implements Plugin
     public function setMenuForm(string | callable $menuForm): FilamentMenuxPlugin
     {
         if (is_callable($menuForm)) {
-            $menuForm = $menuForm();
+            $this->deferConfiguration('menuForm', $menuForm);
 
-            if (is_object($menuForm)) {
-                $menuForm = get_class($menuForm);
-            }
+            return $this;
         }
 
         if (! is_subclass_of($menuForm, MenuForm::class)) {
@@ -267,11 +309,9 @@ final class FilamentMenuxPlugin implements Plugin
     public function setMenuItemForm(string | callable $menuItemForm): FilamentMenuxPlugin
     {
         if (is_callable($menuItemForm)) {
-            $menuItemForm = $menuItemForm();
+            $this->deferConfiguration('menuItemForm', $menuItemForm);
 
-            if (is_object($menuItemForm)) {
-                $menuItemForm = get_class($menuItemForm);
-            }
+            return $this;
         }
 
         if (! is_subclass_of($menuItemForm, MenuItemForm::class)) {
@@ -286,8 +326,13 @@ final class FilamentMenuxPlugin implements Plugin
     /**
      * Set the navigation label for {@see MenuResource}
      */
-    public function setNavigationLabel(string $navigationLabel): FilamentMenuxPlugin
+    public function setNavigationLabel(string | callable $navigationLabel): FilamentMenuxPlugin
     {
+        if (is_callable($navigationLabel)) {
+            $this->deferConfiguration('navigationLabel', $navigationLabel);
+
+            return $this;
+        }
         $this->navigationLabel = $navigationLabel;
 
         return $this;
@@ -327,8 +372,11 @@ final class FilamentMenuxPlugin implements Plugin
      */
     public function setNavigationIcon(string | null | \BackedEnum | callable $navigationIcon): FilamentMenuxPlugin
     {
-        $result = is_callable($navigationIcon) ? $navigationIcon() : $navigationIcon;
-        $this->navigationIcon = $result;
+        if (is_callable($navigationIcon)) {
+            $this->deferConfiguration('navigationIcon', $navigationIcon);
+        } else {
+            $this->navigationIcon = $navigationIcon;
+        }
 
         return $this;
     }
@@ -358,11 +406,13 @@ final class FilamentMenuxPlugin implements Plugin
      */
     public function setNavigationGroup(string | callable | null $resourceNavigationGroup): FilamentMenuxPlugin
     {
-
-        $this->resourceNavigationGroup = is_callable($resourceNavigationGroup) ? $resourceNavigationGroup() : $resourceNavigationGroup;
+        if (is_callable($resourceNavigationGroup)) {
+            $this->deferConfiguration('navigationGroup', $resourceNavigationGroup);
+        } else {
+            $this->resourceNavigationGroup = $resourceNavigationGroup;
+        }
 
         return $this;
-
     }
 
     /**
@@ -466,9 +516,6 @@ final class FilamentMenuxPlugin implements Plugin
 
     /**
      * Register a new static menu item for the plugin.
-     *
-     * @param  string  $label  The display name of the menu item.
-     * @param  string  $url  The target URL for the menu item.
      */
     public function addStaticMenuItem(string $title, string $url, \BackedEnum | string $target = MenuxLinkTarget::BLANK): FilamentMenuxPlugin
     {
@@ -486,7 +533,7 @@ final class FilamentMenuxPlugin implements Plugin
      *     ...
      * ]
      */
-    public function addStaticMenuItemsUsing(callable $resolver): static
+    public function addStaticMenuItemsUsing(callable $resolver): FilamentMenuxPlugin
     {
         $this->staticMenuItemResolvers[] = $resolver;
 
@@ -504,8 +551,12 @@ final class FilamentMenuxPlugin implements Plugin
      */
     public function useStaticMenus(array | callable $slugs, bool $shouldCreateOnBoot = false): FilamentMenuxPlugin
     {
-        $menus = is_callable($slugs) ? $slugs() : $slugs;
-        $this->staticMenus = collect($menus);
+        if (is_callable($slugs)) {
+            $this->deferConfiguration('staticMenus', $slugs);
+
+            return $this;
+        }
+        $this->staticMenus = collect($slugs);
 
         $this->createStaticMenusOnBoot = $shouldCreateOnBoot;
 
@@ -543,6 +594,7 @@ final class FilamentMenuxPlugin implements Plugin
      */
     public function boot(Panel $panel): void
     {
+        $this->resolveDeferredConfigurations();
         // Reserved for plugin runtime hooks or bootstrapping logic.
         if ($this->staticMenus->isNotEmpty() && $this->getShouldCreateStaticMenusOnBoot()) {
             $this->staticMenus->each(function ($label, $slug) {
