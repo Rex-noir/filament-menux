@@ -15,6 +15,7 @@ use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm;
 use AceREx\FilamentMenux\Filament\Resources\Menus\Tables\MenusTable;
 use AceREx\FilamentMenux\Models\Menu;
 use AceREx\FilamentMenux\Models\MenuItem;
+use AceREx\FilamentMenux\Support\DeferredConfiguration;
 use Filament\Actions\Action;
 use Filament\Contracts\Plugin;
 use Filament\Panel;
@@ -91,7 +92,7 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected function deferConfiguration(string $key, $value): void
     {
-        $this->deferredConfigurations[$key] = $value;
+        $this->deferredConfigurations[$key] = new DeferredConfiguration($value);
     }
 
     protected function resolveDeferredConfigurations(): void
@@ -130,6 +131,11 @@ final class FilamentMenuxPlugin implements Plugin
 
                     case 'perPage':
                         $this->setMenuxablesPerPage($value);
+
+                        break;
+
+                    case 'staticMenus':
+                        $this->staticMenus = collect($value);
 
                         break;
 
@@ -539,7 +545,7 @@ final class FilamentMenuxPlugin implements Plugin
      *
      * The callable should return an iterable of items:
      * [
-     *     ['label' => 'Home', 'url' => '/', 'target' => MenuxLinkTarget::SELF],
+     *     ['title' => 'Home', 'url' => '/', 'target' => MenuxLinkTarget::SELF],
      *     ...
      * ]
      */
@@ -561,6 +567,7 @@ final class FilamentMenuxPlugin implements Plugin
      */
     public function useStaticMenus(array | callable $slugs, bool $shouldCreateOnBoot = false): FilamentMenuxPlugin
     {
+        $this->createStaticMenusOnBoot = $shouldCreateOnBoot;
         if (is_callable($slugs)) {
             $this->deferConfiguration('staticMenus', $slugs);
 
@@ -568,17 +575,15 @@ final class FilamentMenuxPlugin implements Plugin
         }
         $this->staticMenus = collect($slugs);
 
-        $this->createStaticMenusOnBoot = $shouldCreateOnBoot;
-
         return $this;
     }
 
     /**
      * Retrieve the currently defined static menus.
      *
-     * @return Collection<string, string>|null
+     * @return Collection<string, string>
      */
-    public function getStaticMenus(): ?Collection
+    public function getStaticMenus(): Collection
     {
         return $this->staticMenus;
     }
