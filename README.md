@@ -13,7 +13,7 @@ things can sometimes become a pain-in-ass (At least in my experience).
 - [Example Usage](#example-usage)
 - [Static Menus](#static-menus)
 - [Static Menu Items](#static-menu-items)
-- [Custom Custom Models](#using-custom-models)
+- [Using Custom Models](#using-custom-models)
 - [Add Model-Based Menu Items](#add-model-based-menu-items)
 - [Modifying the Base Resource Class](#modifying-the-base-resource-class)
 - [Custom Forms And Tables](#custom-forms-and-table)
