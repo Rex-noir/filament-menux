@@ -80,15 +80,16 @@ Just like any other panel plugins, you can register this in your panel provider
 
 With static menus you can limit how many menus can be created except the menus you provided.
 This is useful, especially for projects where the frontend fetches the menus statically via slug.
-To pass static menus, you pass the menus to the **useStaticMenus** method. After that the plugin will try to create the
-static menus automatically if the slug is not in the database on boot.
+To pass static menus, you pass the menus to the **useStaticMenus** method. If you want the plugin to check
+and create the defined static menus on boot, pass the third second parameter boolean value. By default, it
+is disabled.
 
 ```php
 \AceREx\FilamentMenux\FilamentMenuxPlugin::make()
     ->useStaticMenus([
         'slug'=>'label',
         'header'=>"Header"
-    ])
+    ], true)
 ```
 
 ## Static Menu Items

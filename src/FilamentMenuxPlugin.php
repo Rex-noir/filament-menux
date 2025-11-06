@@ -34,6 +34,11 @@ final class FilamentMenuxPlugin implements Plugin
     protected ?Collection $staticMenus = null;
 
     /**
+     * It will not use static menus on boot of the plugin
+     */
+    protected bool $createStaticMenusOnBoot = false;
+
+    /**
      * Fully qualified class name of the associated Filament resource.
      *
      * @var class-string<MenuResource>
@@ -78,6 +83,12 @@ final class FilamentMenuxPlugin implements Plugin
         $this->menuxableModels = collect();
         $this->actionModifiers = collect();
         $this->staticMenus = collect();
+    }
+
+    public function getShouldCreateStaticMenusOnBoot(): bool
+    {
+        return $this->createStaticMenusOnBoot;
+
     }
 
     public function getActionModifier(MenuxActionType $actionType): ?ActionModifier
@@ -479,10 +490,12 @@ final class FilamentMenuxPlugin implements Plugin
      *                                                                          The array should map slugs to their corresponding labels,
      *                                                                          for example, ['home' => 'Home', 'about-us' => 'About Us'].
      */
-    public function useStaticMenus(array | callable $slugs): FilamentMenuxPlugin
+    public function useStaticMenus(array | callable $slugs, bool $shouldCreateOnBoot = false): FilamentMenuxPlugin
     {
         $menus = is_callable($slugs) ? $slugs() : $slugs;
         $this->staticMenus = collect($menus);
+
+        $this->createStaticMenusOnBoot = $shouldCreateOnBoot;
 
         return $this;
     }
@@ -519,7 +532,7 @@ final class FilamentMenuxPlugin implements Plugin
     public function boot(Panel $panel): void
     {
         // Reserved for plugin runtime hooks or bootstrapping logic.
-        if ($this->staticMenus->isNotEmpty()) {
+        if ($this->staticMenus->isNotEmpty() && $this->getShouldCreateStaticMenusOnBoot()) {
             $this->staticMenus->each(function ($label, $slug) {
                 /** @var Menu $menuModel */
                 $menuModel = $this->getMenuModel();
