@@ -96,14 +96,8 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     public function updatedSearchQuery(): void
     {
         $this->selectedItems = [];
-
-        if ($this->activeTab === 'Static') {
-            // Static items filtering happens in schema
-        } elseif ($this->activeTab && class_exists($this->activeTab)) {
-            $this->buildMenuxableData($this->activeTab, 1);
-        } else {
-            $this->loadMenuxables();
-        }
+        $this->loadMenuxables();
+        dd('HI');
     }
 
     private function buildMenuxableData(string $modelClass, int $page = 1): void
@@ -192,7 +186,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
 
                             $pagination = [];
                             /** @var string $modelClass */
-                            $pagination[] = Action::make(__('menux.actions.load_previous'))
+                            $pagination[] = Action::make('loadPrevious' . md5($modelClass))
                                 ->label(__('menux.actions.load_previous'))
                                 ->icon(icon: Heroicon::ChevronLeft)
                                 ->link()
@@ -203,7 +197,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
                             $pagination[] = Text::make(__('menux.tabs.page_of', ['current' => $data['current_page'], 'last' => $data['last_page']]));
 
                             /** @var string $modelClass */
-                            $pagination[] = Action::make('loadMore')
+                            $pagination[] = Action::make('loadMore' . md5($modelClass))
                                 ->label(__('menux.actions.load_more'))
                                 ->icon(icon: Heroicon::ChevronRight)
                                 ->link()
