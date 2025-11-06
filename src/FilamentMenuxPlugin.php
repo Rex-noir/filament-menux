@@ -184,14 +184,24 @@ final class FilamentMenuxPlugin implements Plugin
      *
      * @return $this
      */
-    public function setMenusTable(string $menusTable): FilamentMenuxPlugin
+    public function setMenusTable(string | callable $menusTable): FilamentMenuxPlugin
     {
-        if (! class_exists($menusTable)) {
-            throw new InvalidArgumentException("Table class {$menusTable} does not exist");
+        if (is_callable($menusTable)) {
+            $menusTable = $menusTable();
+
+            if (is_object($menusTable)) {
+                $menusTable = get_class($menusTable);
+            }
         }
+
+        if (! class_exists($menusTable)) {
+            throw new InvalidArgumentException("Table class {$menusTable} does not exist.");
+        }
+
         if (! is_subclass_of($menusTable, MenusTable::class)) {
             throw new InvalidArgumentException("Table class {$menusTable} is not a valid table.");
         }
+
         $this->menusTable = $menusTable;
 
         return $this;

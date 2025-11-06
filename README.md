@@ -262,6 +262,47 @@ Also, you can pass the anonymouse class
 });
 ```
 
+#### Custom Menus Table
+
+You can also pass custom menus table with both traditional class and function that returns anonymouse class that extends
+the base MenuTables class
+For example,
+
+```php
+->setMenusTable(\App\Tables\MainMenusTable::class)
+```
+
+or
+
+```php
+->setMenusTable(fn() => new class extends \App\Tables\MenusTable {
+
+    public static function configure(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('name')
+                    ->label('Name')
+                    ->sortable()
+                    ->searchable(),
+            ])
+            ->filters([
+                //
+            ])
+            ->recordActions([
+                \Filament\Actions\DeleteAction::make(),
+                \Filament\Actions\EditAction::make()
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+});
+```
+
 ## Using Custom Link Target Enum
 
 By default the plugin uses ```MenuxLinkTarget``` for model cast and inside menu item form.
