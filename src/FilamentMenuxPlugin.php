@@ -191,7 +191,7 @@ final class FilamentMenuxPlugin implements Plugin
     }
 
     /**
-     * Customize the menus table which shows list of menus. By default, it contains one column, two actions and one bulk action.
+     * Customize the menu table which shows the list of menus. By default, it contains one column, two actions and one bulk action.
      * The custom class must extend {@see MenusTable} or {@see \http\Exception\InvalidArgumentException} will be thrown
      *
      * @return $this
@@ -204,10 +204,6 @@ final class FilamentMenuxPlugin implements Plugin
             if (is_object($menusTable)) {
                 $menusTable = get_class($menusTable);
             }
-        }
-
-        if (! class_exists($menusTable)) {
-            throw new InvalidArgumentException("Table class {$menusTable} does not exist.");
         }
 
         if (! is_subclass_of($menusTable, MenusTable::class)) {
@@ -244,10 +240,6 @@ final class FilamentMenuxPlugin implements Plugin
             }
         }
 
-        if (! class_exists($menuForm)) {
-            throw new InvalidArgumentException("Form class {$menuForm} does not exist.");
-        }
-
         if (! is_subclass_of($menuForm, MenuForm::class)) {
             throw new InvalidArgumentException("Form class {$menuForm} is not a valid form.");
         }
@@ -270,18 +262,23 @@ final class FilamentMenuxPlugin implements Plugin
      *
      * @return $this
      */
-    public function setMenuItemForm(string $menuItemForm): FilamentMenuxPlugin
+    public function setMenuItemForm(string | callable $menuItemForm): FilamentMenuxPlugin
     {
-        if (! class_exists($menuItemForm)) {
-            throw new InvalidArgumentException("Form class {$menuItemForm} does not exist");
+        if (is_callable($menuItemForm)) {
+            $menuItemForm = $menuItemForm();
+
+            if (is_object($menuItemForm)) {
+                $menuItemForm = get_class($menuItemForm);
+            }
         }
+
         if (! is_subclass_of($menuItemForm, MenuItemForm::class)) {
             throw new InvalidArgumentException("Form class {$menuItemForm} is not a valid form.");
         }
+
         $this->menuItemForm = $menuItemForm;
 
         return $this;
-
     }
 
     /**
@@ -341,9 +338,6 @@ final class FilamentMenuxPlugin implements Plugin
      */
     public function useCustomMenuResource(string $menuResource): FilamentMenuxPlugin
     {
-        if (! class_exists($menuResource)) {
-            throw new InvalidArgumentException("Resource class {$menuResource} does not exist");
-        }
 
         if (! is_subclass_of($menuResource, MenuResource::class)) {
             throw new InvalidArgumentException("Resource class {$menuResource} is not a valid resource.");
@@ -381,7 +375,7 @@ final class FilamentMenuxPlugin implements Plugin
     /**
      * Set the link target enum used by {@see MenuItemForm} by default.
      * If you use custom {@see MenuItemForm} setting this is unnecessary since the form can have its own options for link target.
-     * By default it is set to {@see MenuxLinkTarget}}
+     * By default, it is set to {@see MenuxLinkTarget}}
      *
      * @return $this
      */

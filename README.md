@@ -302,6 +302,11 @@ or
 });
 ```
 
+#### Custom Menu Item Form
+
+You can also use your own custom menu item form.
+Just pass your menu
+
 ## Action Modifiers
 
 You can modify actions defined in the ```AceREx\FilamentMenux\Contracts\Enums\MenuxActionType```.
