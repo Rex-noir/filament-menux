@@ -15,7 +15,8 @@ look trivial, but having to roll your own custom resource and extending the plug
 - [Static Menus](#static-menus)
 - [Static Menu Items](#static-menu-items)
 - [Add Model-Based Menu Items](#add-model-based-menu-items)
-- [Set Records Per Page For Menu-Based Menu Items](#set-records-per-page-for-menu-based-menu-items)
+- [Modifying the Base Resource Class](#modifying-the-base-resource-class)
+- [Custom Forms And Tables](#custom-forms-and-table)
 - [Using Custom Link Target Enum](#using-custom-link-target-enum)
 
 ## Installation
@@ -112,11 +113,13 @@ Ngô Quốc Đạt, this plugin supports registering models and rendering them i
 ```
 
 The model must implement interfaces;
+
 ```php
 \AceREx\FilamentMenux\Contracts\Interfaces\Menuxable
 ```
 
 For example;
+
 ```php
 class Post extends Model implements Menuxable
 {
@@ -162,12 +165,101 @@ class Post extends Model implements Menuxable
 
 ![Menuxable Model](docs/images/menuxable-menus-ui-list.png)
 
-## Set Records Per Page For Menu-Based Menu Items
+#### Set Records Per Page For Menu-Based Menu Items
 
 By default, all menuxable menus are paginated with 4 records per page. However, you can customize this
 by providing the number of records you want to query per page via:
+
 ```php
 ->setPerPage(4)
+```
+
+## Modifying the Base Resource Class
+
+The plugin supports modifying the base resource class without having to extend the base class.
+
+#### Navigation Group
+
+To Set navigation group of the resource, you can do it like this:
+
+```php
+->setResourceNavigationGroup('Group')
+```
+
+#### Navigation Label
+
+To Set the navigation label of the resource, you can do it like this:
+
+```php
+->setNavigationLabel('Label')
+```
+
+#### Navigation Icon
+
+To set the navigation icon of the resource, you can do it like this:
+
+```php
+->setNavigationIcon(\Filament\Support\Icons\Heroicon::AcademicCap)
+```
+
+## Custom Forms and Table
+
+The plugin also allows you to set custom form and table.
+
+#### Custom Menu Form With Traditional Class
+
+```php
+->setMenuForm(CustomForm::class)
+```
+
+The custom form must extend the plugin's ```MenuForm``` class.
+For example:
+
+```php
+use AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuForm as BaseMenuForm;
+use Filament\Forms\Components\TextInput;
+
+class MenuForm extends BaseMenuForm
+{
+    public static function configure(): array
+    {
+        return [
+            TextInput::make('name'),
+        ];
+    }
+}
+
+```
+
+#### Custom Menu Form With Anonymouse Class
+
+Also, you can pass the anonymouse class
+
+```php
+->setMenuForm(fn() => new class extends \App\Forms\MenuForm {
+
+    public static function configure(): array
+    {
+        return [
+            Section::make('Menu')
+                ->collapsible()
+                ->headerActions([
+                    DeleteAction::make(),
+                    Action::make('save')
+                        ->label('Save')
+                        ->button()
+                        ->action('save'),
+                ])
+                ->schema([
+                    TextInput::make('name')
+                        ->label('Name')
+                        ->required()
+                        ->maxLength(255),
+                ]),
+        ];
+    }
+    
+});
 ```
 
 ## Using Custom Link Target Enum
