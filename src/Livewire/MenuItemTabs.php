@@ -97,7 +97,6 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     {
         $this->selectedItems = [];
         $this->loadMenuxables();
-        dd('HI');
     }
 
     private function buildMenuxableData(string $modelClass, int $page = 1): void
