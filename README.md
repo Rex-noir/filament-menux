@@ -311,7 +311,7 @@ Just pass your menu item form class that extends the plugin base class.
 ->setMenuItemForm(YourCustomMenuItemForm::class)
 ```
 
-YOu can also pass callable that returns anonymouse class too.
+You can also pass callable that returns anonymouse class too.
 
 ```php
 ->setMenuItemForm(function (){
