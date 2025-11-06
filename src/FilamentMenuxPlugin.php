@@ -128,6 +128,11 @@ final class FilamentMenuxPlugin implements Plugin
 
                         break;
 
+                    case 'perPage':
+                        $this->setMenuxablesPerPage($value);
+
+                        break;
+
                 }
             }
         }
@@ -464,8 +469,13 @@ final class FilamentMenuxPlugin implements Plugin
      *
      * @return $this
      */
-    public function setMenuxablesPerPage(int $menuxablePerPage): FilamentMenuxPlugin
+    public function setMenuxablesPerPage(int | callable $menuxablePerPage): FilamentMenuxPlugin
     {
+        if (is_callable($menuxablePerPage)) {
+            $this->deferConfiguration('perPage', $menuxablePerPage);
+
+            return $this;
+        }
         $this->perPage = $menuxablePerPage;
 
         return $this;
