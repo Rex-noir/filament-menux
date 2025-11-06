@@ -19,6 +19,15 @@ class MenusTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function ($query) {
+                $plugin = FilamentMenuxPlugin::get();
+                $slugs = $plugin->getStaticMenus()->keys();
+                if ($slugs->isNotEmpty()) {
+                    return $query->whereIn('slug', $slugs->toArray());
+                }
+
+                return $query;
+            })
             ->columns([
                 TextColumn::make('name')
                     ->label('Name')
