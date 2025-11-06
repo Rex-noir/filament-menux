@@ -6,7 +6,8 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/acerex/filament-menux.svg?style=flat-square)](https://packagist.org/packages/acerex/filament-menux)
 
 Inspired by existing menu builders, but simplified and easier to customize. Most of the customizations might
-look trivial, but having to roll your own custom resource and extending the plugin's classes to customize these little things can sometimes become a pain-in-ass (At least in my experience).
+look trivial, but having to roll your own custom resource and extending the plugin's classes to customize these little
+things can sometimes become a pain-in-ass (At least in my experience).
 
 ## Table of Contents
 
@@ -51,13 +52,13 @@ FilamentMenuxPlugin::make()
         'footer' => 'Footer',
         ])
     ->addStaticMenuItem('Home', '/')
-    ->setNavigationLabel('WATASHI')
+    ->setNavigationLabel('Custom Menu Label')
     ->setPerPage(4)
     ->setActionModifierUsing(MenuxActionType::EDIT_MENU_ITEM, function (Action $action) {
         return $action->icon(Heroicon::MagnifyingGlassCircle);
     })
     ->addMenuxableModel(Post::class)
-    ->setResourceNavigationGroup('WATASHI')
+    ->setResourceNavigationGroup('Custom Menu Group')
     ->addStaticMenuItem('Contact Us', '/contact-us')
     ->setLinkTargetEnum(linkTargetEnum: LinkTarget::class)
     ->addMenuxableModel(model: Page::class),
@@ -78,7 +79,7 @@ Just like any other panel plugins, you can register this in your panel provider
 
 With static menus you can limit how many menus can be created except the menus you provided.
 This is useful, especially for projects where the frontend fetches the menus statically via slug.
-To pass static menus you pass the menus to the **useStaticMenus** method.
+To pass static menus, you pass the menus to the **useStaticMenus** method.
 
 ```php
 \AceREx\FilamentMenux\FilamentMenuxPlugin::make()
@@ -167,7 +168,7 @@ class Post extends Model implements Menuxable
 
 #### Set Records Per Page For Menu-Based Menu Items
 
-By default, all menuxable menus are paginated with 4 records per page. However, you can customize this
+By default, all menuxable menus are paginated with four records per page. However, you can customize this
 by providing the number of records you want to query per page via:
 
 ```php
@@ -265,8 +266,8 @@ Also, you can pass the anonymouse class
 #### Custom Menus Table
 
 You can also pass custom menus table with both traditional class and function that returns anonymouse class that extends
-the base MenuTables class
-For example,
+the base MenuTables class,
+For example.
 
 ```php
 ->setMenusTable(\App\Tables\MainMenusTable::class)
@@ -305,9 +306,9 @@ or
 
 ## Using Custom Link Target Enum
 
-By default the plugin uses ```MenuxLinkTarget``` for model cast and inside menu item form.
+By default, the plugin uses ```MenuxLinkTarget``` for model cast and inside menu item form.
 But sometimes, you would like to show fewer options or modify the labeling. Or add some more functionality.
-To do that, you can pass your own enum and that enum will be used inside the menu item form and the model cast.
+To do that, you can pass your own enum, and that enum will be used inside the menu item form and the model cast.
 
 ```php
 ->setLinkTargetEnum(linkTargetEnum: LinkTarget::class)
