@@ -48,8 +48,7 @@ class FilamentMenuxServiceProvider extends PackageServiceProvider
 
         if (file_exists($package->basePath('/../database/migrations'))) {
             $package
-                ->hasMigrations($this->getMigrations())
-                ->runsMigrations();
+                ->hasMigrations($this->getMigrations());
         }
 
         if (file_exists($package->basePath('/../resources/lang'))) {
