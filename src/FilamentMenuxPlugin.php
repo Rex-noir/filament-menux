@@ -81,6 +81,7 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected Collection $actionModifiers;
 
+    protected Collection $staticGroups;
 
     public function __construct()
     {
@@ -89,6 +90,18 @@ final class FilamentMenuxPlugin implements Plugin
         $this->menuxableModels = collect();
         $this->actionModifiers = collect();
         $this->staticMenus = collect();
+        $this->staticGroups = collect();
+    }
+
+    public function addStaticGroup(string $name, array | callable $items): FilamentMenuxPlugin
+    {
+        if (is_callable($items)) {
+            $this->deferConfiguration("staticGroup_{$name}", $items);
+        } else {
+            $this->staticGroups->put($name, $items);
+        }
+
+        return $this;
     }
 
     public function setStaticTabTitle(string | callable $title): FilamentMenuxPlugin
@@ -121,6 +134,12 @@ final class FilamentMenuxPlugin implements Plugin
                 $value = $config->resolve();
 
                 switch ($key) {
+                    case str_starts_with($key, 'staticGroup_'):
+                        $groupName = substr($key, strlen('staticGroup_'));
+                        $this->staticGroups->put($groupName, $value);
+
+                        break;
+
                     case 'staticMenuItemResolver':
                         $resolvedItems = collect($value);
                         $resolvedItems->each(function ($item) {
