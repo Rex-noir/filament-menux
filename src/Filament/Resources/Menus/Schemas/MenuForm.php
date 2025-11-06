@@ -2,6 +2,7 @@
 
 namespace AceREx\FilamentMenux\Filament\Resources\Menus\Schemas;
 
+use AceREx\FilamentMenux\FilamentMenuxPlugin;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\TextInput;
@@ -11,14 +12,19 @@ class MenuForm
 {
     public static function configure(): array
     {
+        $plugin = FilamentMenuxPlugin::get();
+        $visible = $plugin->getStaticMenus()->isEmpty();
+
         return [
             Section::make('Menu')
                 ->collapsible()
                 ->headerActions([
-                    DeleteAction::make(),
+                    DeleteAction::make()
+                        ->visible($visible),
                     Action::make('save')
                         ->label('Save')
                         ->button()
+                        ->visible($visible)
                         ->action('save'),
                 ])
                 ->schema([
