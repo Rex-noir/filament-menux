@@ -518,6 +518,17 @@ final class FilamentMenuxPlugin implements Plugin
     public function boot(Panel $panel): void
     {
         // Reserved for plugin runtime hooks or bootstrapping logic.
+        if ($this->staticMenus->isNotEmpty()) {
+            $this->staticMenus->each(function ($label, $slug) {
+                /** @var Menu $menuModel */
+                $menuModel = $this->getMenuModel();
+                $menuModel::updateOrCreate([
+                    'slug' => $slug,
+                ], [
+                    'name' => $label,
+                ]);
+            });
+        }
     }
 
     /**
