@@ -93,7 +93,7 @@ final class FilamentMenuxPlugin implements Plugin
         $this->groupedMenuItems = collect();
     }
 
-    public function addStaticGroup(string $name, array | callable $items): FilamentMenuxPlugin
+    public function addGroupedMenuItems(string $name, array | callable $items): FilamentMenuxPlugin
     {
         if (is_callable($items)) {
             $this->deferConfiguration("groupedMenuItems{$name}", $items);
