@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AceREx\FilamentMenux\Contracts\Interfaces;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * @method static query()
@@ -19,5 +20,5 @@ interface Menuxable
 
     public function getMenuxTarget(): \BackedEnum;
 
-    public static function getMenuxablesUsing(?string $q, Builder $builder): Builder;
+    public static function getMenuxablesUsing(?string $q, Builder $builder): Builder | LengthAwarePaginator;
 }

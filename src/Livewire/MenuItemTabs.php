@@ -103,18 +103,30 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     {
         $plugin = FilamentMenuxPlugin::get();
         $perPage = $plugin->getMenuxablesPerPage();
+
         /** @var Menuxable $modelClass */
-        $pagination = $modelClass::getMenuxablesUsing($this->searchQuery, $modelClass::query())->paginate($perPage, page: $page);
+        $result = $modelClass::getMenuxablesUsing($this->searchQuery, $modelClass::query(), $page);
+
+        // Handle both paginated and builder results
+        if ($result instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator) {
+            $pagination = $result;
+        } elseif ($result instanceof \Illuminate\Database\Eloquent\Builder) {
+            $pagination = $result->paginate($perPage, page: $page);
+        } else {
+            throw new \RuntimeException(sprintf(
+                '%s::getMenuxablesUsing() must return a Builder or a Paginator instance.',
+                $modelClass
+            ));
+        }
+
         $this->menuxables[$modelClass] = [
-            'items' => collect($pagination->items())->map(function ($item) {
-                return [
-                    'title' => $item->getMenuxTitle(),
-                    'url' => $item->getMenuxUrl(),
-                    'target' => $item->getMenuxTarget()->value,
-                    'type' => 'model',
-                    'id' => \Str::uuid()->toString(),
-                ];
-            })->toArray(),
+            'items' => collect($pagination->items())->map(fn ($item) => [
+                'title' => $item->getMenuxTitle(),
+                'url' => $item->getMenuxUrl(),
+                'target' => $item->getMenuxTarget()->value,
+                'type' => 'model',
+                'id' => \Str::uuid()->toString(),
+            ])->toArray(),
             'current_page' => $pagination->currentPage(),
             'last_page' => $pagination->lastPage(),
             'per_page' => $pagination->perPage(),
