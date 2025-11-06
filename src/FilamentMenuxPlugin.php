@@ -77,6 +77,7 @@ final class FilamentMenuxPlugin implements Plugin
         $this->staticMenuItems = collect();
         $this->menuxableModels = collect();
         $this->actionModifiers = collect();
+        $this->staticMenus = collect();
     }
 
     public function getActionModifier(MenuxActionType $actionType): ?ActionModifier
