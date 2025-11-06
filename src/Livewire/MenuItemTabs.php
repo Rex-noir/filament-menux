@@ -148,6 +148,13 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
         if ($staticMenuItems->isNotEmpty()) {
             $tabs->push(
                 Tab::make('Static')
+                    ->label(function () use ($plugin) {
+                        if ($plugin->getStaticTabTitle() !== null) {
+                            return $plugin->getStaticTabTitle();
+                        }
+
+                        return __('menux.tabs.static');
+                    })
                     ->schema(function () {
                         $filteredItems = $this->getFilteredStaticItems();
 

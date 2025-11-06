@@ -29,6 +29,8 @@ final class FilamentMenuxPlugin implements Plugin
 {
     protected array $deferredConfigurations = [];
 
+    protected ?string $staticTabTitle;
+
     /**
      * Cached collection of static menus defined for the plugin.
      *
@@ -90,6 +92,23 @@ final class FilamentMenuxPlugin implements Plugin
         $this->staticMenus = collect();
     }
 
+    public function setStaticTabTitle(string | callable $title): FilamentMenuxPlugin
+    {
+        if (is_callable($title)) {
+            $this->deferConfiguration('staticTabTitle', $title);
+
+            return $this;
+        }
+        $this->staticTabTitle = $title;
+
+        return $this;
+    }
+
+    public function getStaticTabTitle(): ?string
+    {
+        return $this->staticTabTitle;
+    }
+
     protected function deferConfiguration(string $key, $value): void
     {
         $this->deferredConfigurations[$key] = new DeferredConfiguration($value);
@@ -103,6 +122,10 @@ final class FilamentMenuxPlugin implements Plugin
                 $value = $config->resolve();
 
                 switch ($key) {
+                    case 'staticTabTitle':
+                        $this->setStaticTitle($value);
+
+                        break;
                     case 'navigationIcon':
                         $this->setNavigationIcon($value);
 
