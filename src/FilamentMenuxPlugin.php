@@ -476,6 +476,36 @@ final class FilamentMenuxPlugin implements Plugin
     }
 
     /**
+     * Register multiple static menu items using a callable or a raw array.
+     *
+     * @param  callable|array  $items  A callable returning items or an array of items.
+     *                                 Each item should look like:
+     *                                 [
+     *                                 'label' => 'Home',
+     *                                 'url' => '/',
+     *                                 'target' => MenuxLinkTarget::SELF,
+     *                                 ]
+     */
+    public function addStaticMenuItemsUsing(callable | array $items): FilamentMenuxPlugin
+    {
+        $resolvedItems = collect(is_callable($items) ? call_user_func($items) : $items);
+
+        $resolvedItems->each(function ($item) {
+            $label = $item['label'] ?? null;
+            $url = $item['url'] ?? null;
+            $target = $item['target'] ?? MenuxLinkTarget::BLANK;
+
+            if (! $label || ! $url) {
+                throw new \InvalidArgumentException('Static menu items must have at least a label and a URL.');
+            }
+
+            $this->staticMenuItems->put((string) Str::uuid(), compact('label', 'url', 'target'));
+        });
+
+        return $this;
+    }
+
+    /**
      * Define static menus for the plugin.
      * When this is set and not empty, it will, by default, use a different create action showing only passed items as dialog.
      * The purpose should be for the admin user to be able to create only specified menus.
