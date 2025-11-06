@@ -76,6 +76,8 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected Collection $actionModifiers;
 
+    protected array $staticMenuItemResolvers = [];
+
     public function __construct()
     {
         // Lazy collection initialization ensures no shared static state.
@@ -468,39 +470,25 @@ final class FilamentMenuxPlugin implements Plugin
      * @param  string  $label  The display name of the menu item.
      * @param  string  $url  The target URL for the menu item.
      */
-    public function addStaticMenuItem(string $label, string $url, \BackedEnum | string $target = MenuxLinkTarget::BLANK): FilamentMenuxPlugin
+    public function addStaticMenuItem(string $title, string $url, \BackedEnum | string $target = MenuxLinkTarget::BLANK): FilamentMenuxPlugin
     {
-        $this->staticMenuItems->put((string) Str::uuid(), compact('label', 'url', 'target'));
+        $this->staticMenuItems->put((string) Str::uuid(), compact('title', 'url', 'target'));
 
         return $this;
     }
 
     /**
-     * Register multiple static menu items using a callable or a raw array.
+     * Register deferred static menu items using a callable.
      *
-     * @param  callable|array  $items  A callable returning items or an array of items.
-     *                                 Each item should look like:
-     *                                 [
-     *                                 'label' => 'Home',
-     *                                 'url' => '/',
-     *                                 'target' => MenuxLinkTarget::SELF,
-     *                                 ]
+     * The callable should return an iterable of items:
+     * [
+     *     ['label' => 'Home', 'url' => '/', 'target' => MenuxLinkTarget::SELF],
+     *     ...
+     * ]
      */
-    public function addStaticMenuItemsUsing(callable | array $items): FilamentMenuxPlugin
+    public function addStaticMenuItemsUsing(callable $resolver): static
     {
-        $resolvedItems = collect(is_callable($items) ? call_user_func($items) : $items);
-
-        $resolvedItems->each(function ($item) {
-            $label = $item['label'] ?? null;
-            $url = $item['url'] ?? null;
-            $target = $item['target'] ?? MenuxLinkTarget::BLANK;
-
-            if (! $label || ! $url) {
-                throw new \InvalidArgumentException('Static menu items must have at least a label and a URL.');
-            }
-
-            $this->staticMenuItems->put((string) Str::uuid(), compact('label', 'url', 'target'));
-        });
+        $this->staticMenuItemResolvers[] = $resolver;
 
         return $this;
     }
@@ -567,6 +555,20 @@ final class FilamentMenuxPlugin implements Plugin
                 ]);
             });
         }
+        foreach ($this->staticMenuItemResolvers as $resolver) {
+            $resolvedItems = collect(call_user_func($resolver));
+
+            $resolvedItems->each(function ($item) {
+                $this->addStaticMenuItem(
+                    $item['title'],
+                    $item['url'],
+                    $item['target'] ?? MenuxLinkTarget::BLANK
+                );
+            });
+        }
+
+        // Optional cleanup
+        $this->staticMenuItemResolvers = [];
     }
 
     /**

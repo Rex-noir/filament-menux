@@ -69,7 +69,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
         $this->staticItems = $staticMenuItems->map(function ($item, $id) {
             return [
                 'id' => $id,
-                'title' => $item['label'],
+                'title' => $item['title'],
                 'url' => $item['url'] ?? '#',
                 'target' => $item['target']?->value ?? MenuxLinkTarget::SELF->value,
                 'type' => 'static',
