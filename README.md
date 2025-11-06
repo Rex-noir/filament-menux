@@ -58,7 +58,7 @@ FilamentMenuxPlugin::make()
         return $action->icon(Heroicon::MagnifyingGlassCircle);
     })
     ->addMenuxableModel(Post::class)
-    ->setResourceNavigationGroup('Custom Menu Group')
+    ->setNavigationGroup('Custom Menu Group')
     ->addStaticMenuItem('Contact Us', '/contact-us')
     ->setLinkTargetEnum(linkTargetEnum: LinkTarget::class)
     ->addMenuxableModel(model: Page::class),
@@ -203,7 +203,7 @@ The plugin supports modifying the base resource class without having to extend t
 To Set navigation group of the resource, you can do it like this:
 
 ```php
-->setResourceNavigationGroup('Group')
+->setNavigationGroup('Group')
 ```
 
 #### Navigation Label

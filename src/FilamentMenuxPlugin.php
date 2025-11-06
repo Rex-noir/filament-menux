@@ -354,7 +354,7 @@ final class FilamentMenuxPlugin implements Plugin
      *
      * @return $this
      */
-    public function setResourceNavigationGroup(string | callable | null $resourceNavigationGroup): FilamentMenuxPlugin
+    public function setNavigationGroup(string | callable | null $resourceNavigationGroup): FilamentMenuxPlugin
     {
 
         $this->resourceNavigationGroup = is_callable($resourceNavigationGroup) ? $resourceNavigationGroup() : $resourceNavigationGroup;
