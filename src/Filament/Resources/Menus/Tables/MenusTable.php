@@ -4,6 +4,7 @@ namespace AceREx\FilamentMenux\Filament\Resources\Menus\Tables;
 
 use AceREx\FilamentMenux\Contracts\Enums\MenuxActionType;
 use AceREx\FilamentMenux\Contracts\Traits\HasActionModifier;
+use AceREx\FilamentMenux\FilamentMenuxPlugin;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -28,8 +29,18 @@ class MenusTable
                 //
             ])
             ->recordActions([
-                self::applyActionModifier(EditAction::make(), MenuxActionType::EDIT_MENU),
-                self::applyActionModifier(DeleteAction::make(), MenuxActionType::DELETE_MENU),
+                self::applyActionModifier(EditAction::make(), MenuxActionType::EDIT_MENU)
+                    ->visible(function () {
+                        $plugin = FilamentMenuxPlugin::get();
+
+                        return $plugin->getStaticMenus()->isEmpty();
+                    }),
+                self::applyActionModifier(DeleteAction::make(), MenuxActionType::DELETE_MENU)
+                    ->visible(function () {
+                        $plugin = FilamentMenuxPlugin::get();
+
+                        return $plugin->getStaticMenus()->isEmpty();
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
