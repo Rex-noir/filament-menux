@@ -111,7 +111,7 @@ class FilamentMenuxServiceProvider extends PackageServiceProvider
     protected function getAssets(): array
     {
         return [
-            Js::make('filament-menux-scripts', __DIR__ . '/../resources/dist/filament-menux.js'),
+            // Js::make('filament-menux-scripts', __DIR__ . '/../resources/dist/filament-menux.js'),
         ];
     }
 
