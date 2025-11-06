@@ -3,6 +3,7 @@
 namespace AceREx\FilamentMenux\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Sluggable\HasSlug;
 
 class Menu extends Model
@@ -20,5 +21,10 @@ class Menu extends Model
             ->generateSlugsFrom('name')
             ->doNotGenerateSlugsOnUpdate()
             ->saveSlugsTo('slug');
+    }
+
+    public function menuItems(): HasMany
+    {
+        return $$this->hasMany(MenuItem::class);
     }
 }
