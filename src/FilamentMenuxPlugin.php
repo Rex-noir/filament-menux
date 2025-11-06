@@ -81,7 +81,6 @@ final class FilamentMenuxPlugin implements Plugin
 
     protected Collection $actionModifiers;
 
-    protected array $staticMenuItemResolvers = [];
 
     public function __construct()
     {
@@ -122,8 +121,20 @@ final class FilamentMenuxPlugin implements Plugin
                 $value = $config->resolve();
 
                 switch ($key) {
+                    case 'staticMenuItemResolver':
+                        $resolvedItems = collect($value);
+                        $resolvedItems->each(function ($item) {
+                            $this->addStaticMenuItem(
+                                $item['title'],
+                                $item['url'],
+                                $item['target'] ?? MenuxLinkTarget::BLANK
+                            );
+                        });
+
+                        break;
+
                     case 'staticTabTitle':
-                        $this->setStaticTitle($value);
+                        $this->setStaticTabTitle($value);
 
                         break;
                     case 'navigationIcon':
@@ -574,7 +585,7 @@ final class FilamentMenuxPlugin implements Plugin
      */
     public function addStaticMenuItemsUsing(callable $resolver): FilamentMenuxPlugin
     {
-        $this->staticMenuItemResolvers[] = $resolver;
+        $this->deferConfiguration('staticMenuItemResolver', $resolver);
 
         return $this;
     }
@@ -645,20 +656,6 @@ final class FilamentMenuxPlugin implements Plugin
                 ]);
             });
         }
-        foreach ($this->staticMenuItemResolvers as $resolver) {
-            $resolvedItems = collect(call_user_func($resolver));
-
-            $resolvedItems->each(function ($item) {
-                $this->addStaticMenuItem(
-                    $item['title'],
-                    $item['url'],
-                    $item['target'] ?? MenuxLinkTarget::BLANK
-                );
-            });
-        }
-
-        // Optional cleanup
-        $this->staticMenuItemResolvers = [];
     }
 
     /**
