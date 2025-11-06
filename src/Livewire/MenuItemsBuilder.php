@@ -110,9 +110,6 @@ class MenuItemsBuilder extends Component implements HasActions, HasSchemas
             ->requiresConfirmation()
             ->tooltip('Delete')
             ->action(function ($arguments) {
-                if (count($this->selectedItems) <= 0) {
-                    return;
-                }
                 $id = $arguments['id'];
                 $this->itemModel::descendantsAndSelf($id)->each(function ($item) {
                     $item->delete();
