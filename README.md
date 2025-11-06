@@ -90,8 +90,6 @@ static menus automatically if the slug is not in the database on boot.
     ])
 ```
 
-![Static Menu Items Create](docs/images/static-menus-create-dialog.png)
-
 ## Static Menu Items
 
 Static menu items are shown menu items that you provide from the panel configuration.
