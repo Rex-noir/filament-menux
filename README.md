@@ -65,6 +65,8 @@ FilamentMenuxPlugin::make()
 
 ```
 
+![Demo Pic](docs/images/plugin-cover.png)
+
 ## Registering to panel
 
 Just like any other panel plugins, you can register this in your panel provider
