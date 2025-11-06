@@ -173,7 +173,7 @@ By default, all menuxable menus are paginated with four records per page. Howeve
 by providing the number of records you want to query per page via:
 
 ```php
-->setPerPage(4)
+->setMenuxablesPerPage(4)
 ```
 
 ## Using Custom Models
