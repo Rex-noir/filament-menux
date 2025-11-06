@@ -12,7 +12,7 @@ things can sometimes become a pain-in-ass (At least in my experience).
 ## Table of Contents
 
 - [Installation](#installation)
-- [Registering to panel](#registering-to-panel)
+- [Example Usage](#example-usage)
 - [Static Menus](#static-menus)
 - [Static Menu Items](#static-menu-items)
 - [Add Model-Based Menu Items](#add-model-based-menu-items)
@@ -42,7 +42,7 @@ Optionally, you can publish the views using
 php artisan vendor:publish --tag="filament-menux-views"
 ```
 
-## Usage
+## Example Usage
 
 To start using, add the plugin to the panel you want.
 
@@ -368,6 +368,7 @@ For example, with closure:
 Here the closure receives the Filament Action instance, and the plugin merges it with the default configurations.
 
 Also, you can pass class-based **Action Modifiers**. For example,
+
 ```php
 use AceREx\FilamentMenux\Contracts\Interfaces\ActionModifier;
 use Filament\Actions\Action;
@@ -380,7 +381,9 @@ class CustomCreateSubMenuItemAction implements ActionModifier
     }
 }
 ```
+
 and in the panel register the modifier
+
 ```php
 ->setActionModifier(MenuxActionType::CREATE_SUB_MENU_ITEM, CustomCreateSubMenuItemAction::class)
 ```
