@@ -275,7 +275,7 @@ For example.
 or
 
 ```php
-->setMenusTable(fn() => new class extends \App\Tables\MenusTable {
+->setMenusTable(fn() => new class extends \AceREx\FilamentMenux\Filament\Resources\Menus\Tables\MenusTable {
 
     public static function configure(Table $table): Table
     {
