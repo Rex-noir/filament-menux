@@ -102,7 +102,7 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     private function buildMenuxableData(string $modelClass, int $page = 1): void
     {
         $plugin = FilamentMenuxPlugin::get();
-        $perPage = $plugin->getPerPage();
+        $perPage = $plugin->getMenuxablesPerPage();
         /** @var Menuxable $modelClass */
         $pagination = $modelClass::getMenuxablesUsing($this->searchQuery, $modelClass::query())->paginate($perPage, page: $page);
         $this->menuxables[$modelClass] = [

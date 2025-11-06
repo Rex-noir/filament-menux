@@ -453,7 +453,7 @@ final class FilamentMenuxPlugin implements Plugin
     /**
      * Get how much to show in each pagination of {@see Menuxable} models.
      */
-    public function getPerPage(): int
+    public function getMenuxablesPerPage(): int
     {
         return $this->perPage;
     }
@@ -464,7 +464,7 @@ final class FilamentMenuxPlugin implements Plugin
      *
      * @return $this
      */
-    public function setPerPage(int $menuxablePerPage): FilamentMenuxPlugin
+    public function setMenuxablesPerPage(int $menuxablePerPage): FilamentMenuxPlugin
     {
         $this->perPage = $menuxablePerPage;
 
