@@ -13,6 +13,7 @@ things can sometimes become a pain-in-ass (At least in my experience).
 - [Example Usage](#example-usage)
 - [Static Menus](#static-menus)
 - [Static Menu Items](#static-menu-items)
+- [Custom Custom Models](#using-custom-models)
 - [Add Model-Based Menu Items](#add-model-based-menu-items)
 - [Modifying the Base Resource Class](#modifying-the-base-resource-class)
 - [Custom Forms And Tables](#custom-forms-and-table)
@@ -172,6 +173,26 @@ by providing the number of records you want to query per page via:
 ```php
 ->setPerPage(4)
 ```
+
+## Using Custom Models
+
+You can pass your custom models instead of using the default model classes
+
+#### For Custom Menu Model
+
+```php
+->useCustomMenuModel(YourModel::class)
+```
+
+Note: Your custom model must extend the plugin's model.
+
+#### For Custom Menu Item Model
+
+```php
+->useCustomMenuItemModel(CustomMenuItemModel::class)
+```
+
+Note: Your custom model must extend the plugin's model.
 
 ## Modifying the Base Resource Class
 

@@ -150,7 +150,7 @@ final class FilamentMenuxPlugin implements Plugin
         return $this->menuModel;
     }
 
-    public function setMenusModel(string $menuModel): FilamentMenuxPlugin
+    public function useCustomMenuModel(string $menuModel): FilamentMenuxPlugin
     {
         if (! class_exists($menuModel)) {
             throw new InvalidArgumentException("Model class {$menuModel} does not exist");
@@ -168,7 +168,7 @@ final class FilamentMenuxPlugin implements Plugin
         return $this->menuItemModel;
     }
 
-    public function setMenuItemModel(string $menuItemModel): FilamentMenuxPlugin
+    public function useCustomMenuItemModel(string $menuItemModel): FilamentMenuxPlugin
     {
         if (! class_exists($menuItemModel)) {
             throw new InvalidArgumentException("Model class {$menuItemModel} does not exist");
