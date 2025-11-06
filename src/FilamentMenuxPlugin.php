@@ -212,14 +212,24 @@ final class FilamentMenuxPlugin implements Plugin
      *
      * @return $this
      */
-    public function setMenuForm(string $menuForm): FilamentMenuxPlugin
+    public function setMenuForm(string | callable $menuForm): FilamentMenuxPlugin
     {
-        if (! class_exists($menuForm)) {
-            throw new InvalidArgumentException("Form class {$menuForm} does not exist");
+        if (is_callable($menuForm)) {
+            $menuForm = $menuForm();
+
+            if (is_object($menuForm)) {
+                $menuForm = get_class($menuForm);
+            }
         }
+
+        if (! class_exists($menuForm)) {
+            throw new InvalidArgumentException("Form class {$menuForm} does not exist.");
+        }
+
         if (! is_subclass_of($menuForm, MenuForm::class)) {
             throw new InvalidArgumentException("Form class {$menuForm} is not a valid form.");
         }
+
         $this->menuForm = $menuForm;
 
         return $this;
