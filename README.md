@@ -305,7 +305,25 @@ or
 #### Custom Menu Item Form
 
 You can also use your own custom menu item form.
-Just pass your menu
+Just pass your menu item form class that extends the plugin base class.
+
+```php
+->setMenuItemForm(YourCustomMenuItemForm::class)
+```
+
+YOu can also pass callable that returns anonymouse class too.
+
+```php
+->setMenuItemForm(function (){
+    return new class Extends \AceREx\FilamentMenux\Filament\Resources\Menus\Schemas\MenuItemForm {
+        public function make() : array {
+            return [
+                \Filament\Forms\Components\TextInput::make('title')
+            ]; 
+        }
+    }
+})
+```
 
 ## Action Modifiers
 
