@@ -20,5 +20,8 @@ interface Menuxable
 
     public function getMenuxTarget(): \BackedEnum;
 
+    /**
+     * You can also do your own pagination instead of returning the builder instance
+     */
     public static function getMenuxablesUsing(int $page, int $perPage, ?string $q, Builder $builder): Builder | LengthAwarePaginator;
 }

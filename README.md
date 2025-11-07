@@ -123,7 +123,7 @@ The model must implement interfaces;
 For example;
 
 ```php
-class Post extends Model implements Menuxable
+use Illuminate\Database\Eloquent\Builder;class Post extends Model implements Menuxable
 {
     /** @use HasFactory<\Database\Factories\PostFactory> */
     use HasFactory;
@@ -153,7 +153,10 @@ class Post extends Model implements Menuxable
         return MenuxLinkTarget::SELF;
     }
 
-    public static function getMenuxablesUsing(?string $q, Builder $builder): Builder
+    /**
+     * You can also do your own pagination instead of returning the builder instance
+     */
+    public static function getMenuxablesUsing(?string $q, Builder $builder): Builder | \Illuminate\Pagination\LengthAwarePaginator
     {
         if (filled($q)) {
             return $builder->whereLike('title', $q);
