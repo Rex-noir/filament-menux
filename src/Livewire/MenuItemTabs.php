@@ -29,7 +29,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use JetBrains\PhpStorm\NoReturn;
 use Livewire\Attributes\Url;
 
 class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
@@ -289,11 +288,9 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
                                     ->icon(icon: Heroicon::ExclamationCircle);
                             }
 
-                            if (! empty($pagination)) {
-                                $components[] = Flex::make($pagination)
-                                    ->extraAttributes(['style' => 'text-align: center;'])
-                                    ->columnSpanFull();
-                            }
+                            $components[] = Flex::make($pagination)
+                                ->extraAttributes(['style' => 'text-align: center;'])
+                                ->columnSpanFull();
 
                             return $components;
                         })
@@ -304,8 +301,6 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
         return $tabs->toArray();
     }
 
-    #[
-        NoReturn]
     public function addMenuItems(): void
     {
         /** @var MenuItem $itemModel */
@@ -332,9 +327,6 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
             return [$item => $itemData];
         });
 
-        if (empty($itemsToAdd)) {
-            return;
-        }
         collect($itemsToAdd->values())->each(function ($data) use ($itemModel) {
             $itemModel::create($data);
         });
