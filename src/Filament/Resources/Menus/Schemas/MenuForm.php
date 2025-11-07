@@ -24,7 +24,6 @@ class MenuForm
                     Action::make('save')
                         ->label('Save')
                         ->button()
-                        ->visible($visible)
                         ->action('save'),
                 ])
                 ->schema([
