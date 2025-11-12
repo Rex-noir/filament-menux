@@ -213,7 +213,11 @@ use Illuminate\Database\Eloquent\Builder;class Post extends Model implements Men
     {
         $collection = collect();
         $collection->put('OnlyDoctors', function (Builder $builder, $page, $perPage, ?string $q) {
-            return $builder->where('title', '=', 'Dr.');
+            $builder->where('role', 'Doctor');
+            if(filled($q)){
+                $builder->where('title', 'like', "%{$q}%");
+            }
+            return $builder;
         });
 
         return $collection;
