@@ -105,6 +105,48 @@ You can add static menu items like this.
 The third argument is optional and can also be any type of backed enum. For consistency, you should
 use the enum you use for the item form. See [Using custom link target enum](#using-custom-link-target-enum)
 
+## Grouped Static Menu Items
+
+You can also pass grouped static menu items. For example:
+
+```php
+->addGroupedMenuItems('Social Medias', [
+    [
+        'title' => 'Title',
+        'url' => 'https://title.com',
+        'target' => MenuxLinkTarget::BLANK,
+    ],
+    [
+        'title' => 'Facebook',
+        'url' => 'https://www.facebook.com',
+        'target' => MenuxLinkTarget::SELF,
+    ],
+])
+```
+
+Or you can pass a function that returns an array. For example:
+
+```php
+->addGroupedMenuItems('Social Medias', function () {
+    return [
+        [
+            'title' => 'Title',
+            'url' => 'https://title.com',
+            'target' => MenuxLinkTarget::BLANK,
+        ],
+        [
+            'title' => 'Facebook',
+            'url' => 'https://www.facebook.com',
+            'target' => MenuxLinkTarget::SELF,
+        ],
+    ];
+})
+```
+
+The passed function is deferred till the plugin is fully booted.
+
+![GroupedMenuItems](docs/images/grouped_menu_items.png)
+
 ## Add Model-Based Menu Items
 
 Inspired by [Menu Builder](https://filamentphp.com/plugins/datlechin-menu-builder) by
