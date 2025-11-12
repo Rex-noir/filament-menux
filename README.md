@@ -195,10 +195,7 @@ use Illuminate\Database\Eloquent\Builder;class Post extends Model implements Men
         return MenuxLinkTarget::SELF;
     }
 
-    /**
-     * You can also do your own pagination instead of returning the builder instance
-     */
-    public static function getMenuxablesUsing(?string $q, Builder $builder): Builder | \Illuminate\Pagination\LengthAwarePaginator
+    public static function getMenuxablesUsing(Builder $builder, $page, $perPage, ?string $q): Builder
     {
         if (filled($q)) {
             return $builder->whereLike('title', $q);
@@ -206,8 +203,22 @@ use Illuminate\Database\Eloquent\Builder;class Post extends Model implements Men
 
         return $builder;
     }
-}
 
+    /**
+    * This is optional. You can return an empty collection.
+    * This will for each group, so that you don't have to create multiple classes of Model when 
+    * you only have a single table and want separate tabs for each filtering
+    */
+    public static function getMenuxableGroups(): Collection
+    {
+        $collection = collect();
+        $collection->put('OnlyDoctors', function (Builder $builder, $page, $perPage, ?string $q) {
+            return $builder->where('title', '=', 'Dr.');
+        });
+
+        return $collection;
+    }}
+}
 ```
 
 ![Menuxable Model](docs/images/menuxable-menus-ui-list.png)
