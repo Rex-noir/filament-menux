@@ -27,6 +27,7 @@ use Filament\Schemas\Concerns\InteractsWithSchemas;
 use Filament\Schemas\Contracts\HasSchemas;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use Livewire\Attributes\Url;
@@ -50,6 +51,8 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
     public array $selectedItems = [];
 
     public array $groupedMenuItems = [];
+
+    public array $groupedMenuxables = [];
 
     public function mount(string $menuId): void
     {
@@ -102,44 +105,73 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
         $this->loadMenuxables();
     }
 
-    private function buildMenuxableData(string $modelClass, int $page = 1): void
+    /**
+     * Normalize Builder or LengthAwarePaginator to the common menuxables array structure
+     */
+    private function normalizePaginationResult(Builder | \Illuminate\Contracts\Pagination\LengthAwarePaginator $result, int $perPage, int $page): array
+    {
+        return [
+            'items' => collect($result->items())->map(fn ($item) => [
+                'title' => $item->getMenuxTitle(),
+                'url' => $item->getMenuxUrl(),
+                'target' => $item->getMenuxTarget()->value,
+                'type' => 'model',
+                'id' => Str::uuid()->toString(),
+            ])->toArray(),
+            'current_page' => $result->currentPage(),
+            'last_page' => $result->lastPage(),
+            'per_page' => $result->perPage(),
+            'total' => $result->total(),
+        ];
+    }
+
+    private function buildMenuxableData(string $modelClass, int $page = 1, mixed $modelGroupId = null): void
     {
         $plugin = FilamentMenuxPlugin::get();
         $perPage = $plugin->getMenuxablesPerPage();
 
         /** @var Menuxable $modelClass */
-        $result = $modelClass::getMenuxablesUsing($page, $perPage, $this->searchQuery, $modelClass::query());
+        $groups = $modelClass::getMenuxableGroups();
+        if ($groups->isNotEmpty()) {
+            // Determine which groups to process
+            $targetGroups = $modelGroupId
+                ? $groups->filter(fn ($value, $label) => ($modelClass . ':' . $label) === $modelGroupId)
+                : $groups;
 
-        // Handle both paginated and builder results
-        if ($result instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator) {
-            $pagination = $result;
-        } elseif ($result instanceof \Illuminate\Database\Eloquent\Builder) {
-            $pagination = $result->paginate($perPage, page: $page);
-        } else {
-            throw new \RuntimeException(sprintf(
-                '%s::getMenuxablesUsing() must return a Builder or a Paginator instance.',
-                $modelClass
-            ));
+            $targetGroups->each(function ($value, $label) use ($perPage, $page, $modelClass) {
+                $result = $value($modelClass::query(), $page, $perPage, $this->searchQuery);
+                $id = $modelClass . ':' . $label;
+
+                if ($result instanceof \Illuminate\Database\Eloquent\Builder) {
+                    $result = $result->paginate(perPage: $perPage, page: $page);
+                } elseif (! ($result instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)) {
+                    throw new \RuntimeException('Result must be a Builder or a Paginator instance.');
+                }
+                $this->menuxables[$modelClass] ??= [];
+
+                $this->groupedMenuxables[$modelClass][$id] = [
+                    'label' => $label,
+                    'class' => $modelClass,
+                    ...$this->normalizePaginationResult($result, $perPage, $page),
+                ];
+            });
+
+            return;
         }
 
-        $this->menuxables[$modelClass] = [
-            'items' => collect($pagination->items())->map(fn ($item) => [
-                'title' => $item->getMenuxTitle(),
-                'url' => $item->getMenuxUrl(),
-                'target' => $item->getMenuxTarget()->value,
-                'type' => 'model',
-                'id' => \Str::uuid()->toString(),
-            ])->toArray(),
-            'current_page' => $pagination->currentPage(),
-            'last_page' => $pagination->lastPage(),
-            'per_page' => $pagination->perPage(),
-            'total' => $pagination->total(),
-        ];
+        // Fallback if no groups exist
+        $result = $modelClass::getMenuxablesUsing($modelClass::query(), $page, $perPage, $this->searchQuery);
+        if ($result instanceof \Illuminate\Database\Eloquent\Builder) {
+            $result = $result->paginate(perPage: $perPage, page: $page);
+        } elseif (! ($result instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator)) {
+            throw new \RuntimeException('Result must be a Builder or a Paginator instance.');
+        }
+        $this->menuxables[$modelClass] = $this->normalizePaginationResult($result, $perPage, $page);
     }
 
-    public function goToPage(string $modelClass, int $page): void
+    public function goToPage(string $modelClass, int $page, mixed $groupId = null): void
     {
-        $this->buildMenuxableData($modelClass, $page);
+        $this->buildMenuxableData($modelClass, $page, $groupId);
     }
 
     private function getFilteredStaticItems(): array
@@ -163,6 +195,66 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
         }
 
         return $this->groupedMenuItems[$group] ?? [];
+    }
+
+    private function buildPaginationComponents(array $data, string $modelClass, mixed $groupId = null): Flex
+    {
+        $pagination = [];
+        $pagination[] = Action::make('loadPrevious' . md5($modelClass))
+            ->label(__('menux.actions.load_previous'))
+            ->icon(icon: Heroicon::ChevronLeft)
+            ->link()
+            ->iconButton()
+            ->disabled($data['current_page'] <= 1)
+            ->action(fn () => $this->goToPage($modelClass, $data['current_page'] - 1, $groupId));
+
+        $pagination[] = Text::make(__('menux.tabs.page_of', [
+            'current' => $data['current_page'],
+            'last' => $data['last_page'],
+        ]));
+
+        $pagination[] = Action::make('loadMore' . md5($modelClass))
+            ->label(__('menux.actions.load_more'))
+            ->icon(icon: Heroicon::ChevronRight)
+            ->link()
+            ->iconButton()
+            ->extraAttributes(['class' => 'fi-ml-auto'])
+            ->disabled($data['current_page'] >= $data['last_page'])
+            ->action(fn () => $this->goToPage($modelClass, $data['current_page'] + 1, $groupId));
+
+        return Flex::make($pagination)
+            ->extraAttributes(['style' => 'text-align: center;'])
+            ->columnSpanFull();
+    }
+
+    private function buildMenuxableTabSchema(string $modelClass, mixed $groupId = null): array
+    {
+        $data = [];
+        if ($groupId !== null) {
+            $data = $this->groupedMenuxables[$modelClass][$groupId] ?? [];
+
+        } else {
+            $data = $this->menuxables[$modelClass] ?? [];
+        }
+
+        $components = [];
+
+        $pagination = $this->buildPaginationComponents($data, $modelClass, $groupId);
+
+        $options = collect($data['items'])->mapWithKeys(function ($item, $index) {
+            return [$item['id'] => $item['title']];
+        });
+
+        $descriptions = collect($data['items'])->mapWithKeys(fn ($item, $index) => [$item['id'] => $item['url']])->toArray();
+        $components[] = CheckboxList::make('menuxable_items')
+            ->hiddenLabel()
+            ->statePath('selectedItems')
+            ->live()
+            ->options($options->toArray())
+            ->descriptions($descriptions);
+        $components[] = $pagination;
+
+        return $components;
     }
 
     private function getTabs(): array
@@ -233,72 +325,30 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
         }
 
         if ($menuxableModels->isNotEmpty()) {
+
             $menuxableModels->each(callback: function (string $modelClass) use ($tabs) {
-                /** @var Menuxable $modelClass */
-                $tabs->push(
-                    Tab::make($modelClass::getMenuxLabel())
-                        ->id($modelClass)
-                        ->schema(function () use ($modelClass) {
-                            /** @var string $modelClass */
-                            $data = $this->menuxables[$modelClass] ?? [];
-                            if (empty($data)) {
-                                return [];
-                            }
-
-                            $pagination = [];
-                            /** @var string $modelClass */
-                            $pagination[] = Action::make('loadPrevious' . md5($modelClass))
-                                ->label(__('menux.actions.load_previous'))
-                                ->icon(icon: Heroicon::ChevronLeft)
-                                ->link()
-                                ->iconButton()
-                                ->disabled($data['current_page'] <= 1)
-                                ->action(fn () => $this->goToPage($modelClass, $data['current_page'] - 1));
-
-                            $pagination[] = Text::make(__('menux.tabs.page_of', ['current' => $data['current_page'], 'last' => $data['last_page']]));
-
-                            /** @var string $modelClass */
-                            $pagination[] = Action::make('loadMore' . md5($modelClass))
-                                ->label(__('menux.actions.load_more'))
-                                ->icon(icon: Heroicon::ChevronRight)
-                                ->link()
-                                ->iconButton()
-                                ->extraAttributes(['class' => 'fi-ml-auto'])
-                                ->disabled($data['current_page'] >= $data['last_page'])
-                                ->action(fn () => $this->goToPage($modelClass, $data['current_page'] + 1));
-
-                            /** @var string $modelClass */
-                            $options = collect($data['items'])
-                                ->mapWithKeys(function ($item, $index) {
-                                    return [$item['id'] => $item['title']];
-                                });
-                            $descriptions = collect($data['items'])->mapWithKeys(fn ($item, $index) => [$item['id'] => $item['url']])->toArray();
-                            $components = [];
-                            if ($options->isNotEmpty()) {
-                                $components[] =
-                                    CheckboxList::make('menuxable_items')
-                                        ->hiddenLabel()
-                                        ->statePath('selectedItems')
-                                        ->live()
-                                        ->options($options->toArray())
-                                        ->descriptions($descriptions);
-                            } else {
-                                /** @var Menuxable $modelClass */
-                                $components[] = EmptyState::make(__('menux.tabs.no_items_for_model', ['label' => $modelClass::getMenuxLabel()]))
-                                    ->icon(icon: Heroicon::ExclamationCircle);
-                            }
-
-                            $components[] = Flex::make($pagination)
-                                ->extraAttributes(['style' => 'text-align: center;'])
-                                ->columnSpanFull();
-
-                            return $components;
-                        })
-                );
+                $group = $this->groupedMenuxables[$modelClass] ?? null;
+                if ($group !== null) {
+                    foreach ($group as $id => $data) {
+                        $tabs->push(Tab::make($data['label'])
+                            ->id($id)
+                            ->schema(fn () => $this->buildMenuxableTabSchema($data['class'], $id)));
+                    }
+                } else {
+                    /** @var Menuxable $modelClass */
+                    $tabs->push(
+                        Tab::make($modelClass::getMenuxLabel())
+                            ->id($modelClass)
+                            ->schema(function () use ($modelClass) {
+                                /** @var string $modelClass */
+                                return $this->buildMenuxableTabSchema($modelClass);
+                            })
+                    );
+                }
             });
-        }
 
-        return $tabs->toArray();
+            return $tabs->toArray();
+        }
     }
 
     public function addMenuItems(): void
@@ -311,6 +361,12 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
 
         $items = collect($this->staticItems);
         collect($this->menuxables)->each(function ($data, $modelClass) use (&$items) {
+            $group = $this->groupedMenuxables[$modelClass] ?? null;
+            if (! empty($group)) {
+                $items = $items->merge(collect($group)->flatMap(fn ($groupData) => collect($groupData['items'])->mapWithKeys(fn ($item, $index) => [$item['id'] => $item])));
+
+                return;
+            }
             $items = $items->merge(collect($data['items'])->mapWithKeys(fn ($item, $index) => [$item['id'] => $item]));
         });
         collect($this->groupedMenuItems)->each(function ($data, $group) use (&$items) {
