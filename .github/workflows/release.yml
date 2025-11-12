@@ -5,16 +5,19 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+
+    # 👇 ADD THIS BLOCK TO FIX THE ERROR
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v5
 
       - name: Generate changelog
-        run: npx generate-changelog -p   # or -m / -M depending
-
-      # REMOVED the "Commit CHANGELOG.md" step
+        run: npx generate-changelog -p
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
-          body_path: CHANGELOG.md # This uses the file generated above
+          body_path: CHANGELOG.md
