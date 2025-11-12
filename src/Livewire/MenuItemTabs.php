@@ -241,6 +241,13 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
 
         $pagination = $this->buildPaginationComponents($data, $modelClass, $groupId);
 
+        if (empty($data['items'])) {
+            $components[] = EmptyState::make(__('menux.tabs.no_items_found'))
+                ->icon(icon: Heroicon::ExclamationCircle);
+
+            return $components;
+        }
+
         $options = collect($data['items'])->mapWithKeys(function ($item, $index) {
             return [$item['id'] => $item['title']];
         });
@@ -349,6 +356,8 @@ class MenuItemTabs extends \Livewire\Component implements HasActions, HasSchemas
 
             return $tabs->toArray();
         }
+
+        return [];
     }
 
     public function addMenuItems(): void
