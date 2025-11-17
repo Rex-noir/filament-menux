@@ -41,6 +41,12 @@ Optionally, you can publish the views using
 php artisan vendor:publish --tag="filament-menux-views"
 ```
 
+And also you need to add the plugin as a source in the theme css.
+
+```css
+@source '../../../../vendor/acerex/filament-menux/resources/views/**/*.blade.php';
+```
+
 ## Example Usage
 
 To start using, add the plugin to the panel you want.
