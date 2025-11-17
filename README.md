@@ -206,7 +206,7 @@ use Illuminate\Database\Eloquent\Builder;class Post extends Model implements Men
 
     /**
     * This is optional. You can return an empty collection.
-    * This will for each group, so that you don't have to create multiple classes of Model when 
+    * This will add a tab for each group so that you don't have to create multiple classes of Model when 
     * you only have a single table and want separate tabs for each filtering
     */
     public static function getMenuxableGroups(): Collection
